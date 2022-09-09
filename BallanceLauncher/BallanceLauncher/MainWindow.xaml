@@ -1,0 +1,118 @@
+﻿<Window
+    x:Class="BallanceLauncher.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BallanceLauncher"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Closed="Window_Closed"
+    mc:Ignorable="d">
+
+    <Frame x:Name="Root">
+        <Frame.Background>
+            <ImageBrush Stretch="UniformToFill">
+                <ImageBrush.ImageSource>
+                    <BitmapImage x:Name="BackgroundImage" UriSource="rcs/background-1.jpg" />
+                </ImageBrush.ImageSource>
+            </ImageBrush>
+        </Frame.Background>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="AppTitleBarDefinition" Height="32" />
+                <RowDefinition Height="0" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="AppTitleBar">
+                <Image
+                    Width="16"
+                    Height="16"
+                    Margin="8,0"
+                    HorizontalAlignment="Left"
+                    Source="rcs/icon.png" />
+                <StackPanel Margin="32,0,0,2" VerticalAlignment="Center">
+                    <TextBlock
+                        x:Name="AppTitleTextBlock"
+                        CharacterSpacing="100"
+                        FontFamily="Comic Sans MS"
+                        FontWeight="Bold"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="Ballance Launcher X"
+                        TextWrapping="NoWrap" />
+                </StackPanel>
+            </Grid>
+
+            <ProgressBar
+                x:Name="Downloading"
+                Grid.Row="1"
+                Height="1"
+                IsIndeterminate="True"
+                Visibility="Collapsed" />
+
+            <NavigationView
+                x:Name="NavView"
+                Grid.Row="2"
+                AlwaysShowHeader="False"
+                IsBackButtonVisible="Collapsed"
+                ItemInvoked="navView_ItemInvoked"
+                Loaded="navView_Loaded"
+                OpenPaneLength="150"
+                PaneDisplayMode="LeftCompact">
+                <NavigationView.Background>
+                    <AcrylicBrush
+                        x:Name="BackgroundAcrylic"
+                        FallbackColor="Transparent"
+                        Opacity="{x:Bind local:App.Config.AcrylicOpacity}"
+                        TintLuminosityOpacity="0"
+                        TintOpacity="0" />
+                </NavigationView.Background>
+
+                <NavigationView.MenuItems>
+                    <NavigationViewItem
+                        x:Name="HomeNavItem"
+                        Content="主页"
+                        Icon="Home"
+                        Tag="Home" />
+                    <NavigationViewItem Content="实例" Tag="Instances">
+                        <NavigationViewItem.Icon>
+                            <!--  Game  -->
+                            <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE7FC;" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                    <NavigationViewItem
+                        Content="下载"
+                        Icon="Download"
+                        SelectsOnInvoked="False"
+                        Tag="Download">
+                        <NavigationViewItem.MenuItems>
+                            <NavigationViewItem
+                                Content="地图"
+                                Icon="Map"
+                                Tag="DownloadMaps" />
+                            <NavigationViewItem
+                                Content="模组"
+                                Icon="Setting"
+                                Tag="DownloadMods" />
+                            <NavigationViewItem
+                                Content="补丁"
+                                Icon="Repair"
+                                Tag="DownloadTips" />
+                        </NavigationViewItem.MenuItems>
+                    </NavigationViewItem>
+                </NavigationView.MenuItems>
+
+                <NavigationView.FooterMenuItems>
+                    <NavigationViewItem
+                        Content="关于"
+                        Icon="OutlineStar"
+                        Tag="About" />
+                </NavigationView.FooterMenuItems>
+
+                <Frame
+                    x:Name="ContentFrame"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch" />
+            </NavigationView>
+        </Grid>
+    </Frame>
+</Window>

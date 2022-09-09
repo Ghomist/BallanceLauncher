@@ -1,0 +1,83 @@
+﻿<Page
+    x:Class="BallanceLauncher.Pages.BasicConfigPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BallanceLauncher.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="ConfigHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="Margin" Value="0,10,0,20" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="MaxWidth" Value="500" />
+        </Style>
+        <Style x:Key="InfoLine" TargetType="StackPanel">
+            <Setter Property="Margin" Value="0,8,0,4" />
+            <Setter Property="Orientation" Value="Vertical" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="InfoKey" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="0,8,30,8" />
+        </Style>
+        <Style x:Key="Info" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <!--<Setter Property="FontSize" Value="18" />-->
+            <Setter Property="Margin" Value="0" />
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+            <StackPanel>
+                <StackPanel Style="{StaticResource InfoLine}">
+                    <TextBlock Style="{StaticResource InfoKey}" Text="你给我起的名字" />
+                    <TextBox
+                        x:Name="NameTextBox"
+                        Style="{StaticResource Info}"
+                        Text="{x:Bind _instance.Name, Mode=TwoWay}"
+                        TextChanged="NameTextBox_TextChanged" />
+                </StackPanel>
+                <StackPanel Style="{StaticResource InfoLine}">
+                    <TextBlock Style="{StaticResource InfoKey}" Text="我在哪" />
+                    <HyperlinkButton BorderBrush="Gray" Click="BrowseDir">
+                        <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.Path}" />
+                    </HyperlinkButton>
+                </StackPanel>
+                <StackPanel Style="{StaticResource InfoLine}">
+                    <TextBlock Style="{StaticResource InfoKey}" Text="BML" />
+                    <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.HasBMLInstalled}" />
+                </StackPanel>
+                <!--<StackPanel Style="{StaticResource InfoLine}">
+                    <TextBlock Style="{StaticResource InfoKey}" Text="地图数量" />
+                    <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.Maps.Count}" />
+                </StackPanel>
+                <StackPanel Style="{StaticResource InfoLine}">
+                    <TextBlock Style="{StaticResource InfoKey}" Text="模组数量" />
+                    <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.Mods.Count}" />
+                </StackPanel>-->
+                <StackPanel Style="{StaticResource InfoLine}">
+                    <TextBlock Style="{StaticResource InfoKey}" Text="地图在哪" />
+                    <HyperlinkButton BorderBrush="Gray" Click="BrowseMapDir">
+                        <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.MapDir}" />
+                    </HyperlinkButton>
+                </StackPanel>
+                <StackPanel Style="{StaticResource InfoLine}">
+                    <TextBlock Style="{StaticResource InfoKey}" Text="模组在哪" />
+                    <HyperlinkButton BorderBrush="Gray" Click="BrowseModDir">
+                        <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.ModDir}" />
+                    </HyperlinkButton>
+                </StackPanel>
+                <StackPanel Style="{StaticResource InfoLine}">
+                    <TextBlock Style="{StaticResource InfoKey}" Text="玩的时候开的哪里" />
+                    <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.Executable}" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

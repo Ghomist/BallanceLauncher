@@ -1,0 +1,94 @@
+﻿<Page
+    x:Class="BallanceLauncher.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BallanceLauncher.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="HomePageButton" TargetType="ContentControl">
+            <Setter Property="FontFamily" Value="{ThemeResource PhoneFontFamilyNormal}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="{ThemeResource TextStyleLargeFontSize}" />
+            <Setter Property="Height" Value="60" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+    </Page.Resources>
+
+    <StackPanel
+        x:Name="Root"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center">
+
+        <StackPanel
+            Margin="50"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+
+            <TextBlock FontSize="52"><Bold>Ballance Launcher X</Bold></TextBlock>
+            <TextBlock FontSize="22">
+                做一只
+                <!--<Span FontSize="10">B圈</Span>-->
+                <Span Foreground="PaleVioletRed">相</Span>
+                <Span Foreground="LightSeaGreen">当</Span>
+                <Span Foreground="DarkSlateBlue">任</Span>
+                <Span Foreground="DarkOrange">性</Span>
+                的
+                <!--    -->
+                <Underline>平衡球</Underline>
+                启动器</TextBlock>
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+            <SplitButton
+                x:Name="StartButton"
+                Padding="20"
+                Click="StartButton_Click"
+                Style="{StaticResource HomePageButton}">
+                <SplitButton.Flyout>
+                    <MenuFlyout x:Name="InstanceList" Placement="BottomEdgeAlignedRight" />
+                </SplitButton.Flyout>
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Play" />
+                    <TextBlock Margin="10,-1,0,0" FontSize="18">启动</TextBlock>
+                    <TextBlock
+                        x:Name="InstanceName"
+                        Margin="10,-1,0,0"
+                        FontSize="18" />
+                </StackPanel>
+            </SplitButton>
+        </StackPanel>
+
+        <StackPanel
+            Margin="10"
+            HorizontalAlignment="Center"
+            Orientation="Horizontal">
+            <Button
+                x:Name="DownloadButton"
+                Padding="16"
+                Click="DownloadButton_Click"
+                Style="{StaticResource HomePageButton}">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Download" />
+                    <TextBlock Margin="10,-1,0,0" Text="资源下载" />
+                </StackPanel>
+            </Button>
+
+            <Button
+                x:Name="AddButton"
+                Padding="16"
+                Click="AddButton_Click"
+                Style="{StaticResource HomePageButton}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE7FC;" />
+                    <TextBlock Margin="10,-1,0,0" Text="添加游戏" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <StackPanel Height="50" />
+
+    </StackPanel>
+</Page>

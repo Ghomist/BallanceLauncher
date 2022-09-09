@@ -1,0 +1,97 @@
+﻿<Page
+    x:Class="BallanceLauncher.Pages.InstanceOverviewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:app="using:BallanceLauncher"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BallanceLauncher.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="using:BallanceLauncher.Model"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="InstanceCard" x:DataType="model:BallanceInstance">
+            <StackPanel
+                Width="180"
+                Height="240"
+                Padding="20,12,12,20"
+                AutomationProperties.Name="{x:Bind Name}"
+                BorderBrush="Gray"
+                BorderThickness="1"
+                CornerRadius="4"
+                IsTapEnabled="True"
+                Tag="{x:Bind Name}"
+                Tapped="StackPanel_Tapped">
+                <StackPanel.Background>
+                    <AcrylicBrush
+                        FallbackColor="LightGray"
+                        TintLuminosityOpacity="0.5"
+                        TintOpacity="0.5" />
+                </StackPanel.Background>
+
+                <TextBlock
+                    Margin="0,0,0,8"
+                    Style="{ThemeResource SubtitleTextBlockStyle}"
+                    Text="{x:Bind Name}" />
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="游戏路径：" />
+                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind Path}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="BML：" />
+                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind HasBMLInstalled}" />
+                </StackPanel>
+
+                <!--<StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="Mod：" />
+                        <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind Mods.Count}" />
+                    </StackPanel>-->
+
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <StackPanel Margin="24">
+        <GridView
+            AllowDrop="False"
+            CanDragItems="False"
+            CanReorderItems="False"
+            FlowDirection="LeftToRight"
+            IsItemClickEnabled="True"
+            ItemTemplate="{StaticResource InstanceCard}"
+            ItemsSource="{x:Bind app:App.Instances}"
+            SelectionMode="None">
+            <!--
+                SelectionChanged="ContentGridView_SelectionChanged"
+                ItemClick="ContentGridView_ItemClick"
+            -->
+
+            <!--<GridView.Header>
+                <TextBlock Style="{ThemeResource HeaderTextBlockStyle}" Text="所有游戏" />
+            </GridView.Header>-->
+            <GridView.Items>
+                <GridViewItem>
+                    <StackPanel
+                        Width="180"
+                        Height="240"
+                        Padding="12"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="4" />
+                </GridViewItem>
+            </GridView.Items>
+
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid
+                        x:Name="MaxItemsWrapGrid"
+                        MaximumRowsOrColumns="6"
+                        Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+
+        </GridView>
+    </StackPanel>
+</Page>

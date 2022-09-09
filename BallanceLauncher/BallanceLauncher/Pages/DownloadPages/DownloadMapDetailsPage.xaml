@@ -1,0 +1,48 @@
+﻿<Page
+    x:Class="BallanceLauncher.Pages.DownloadMapDetailsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BallanceLauncher.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="KeyText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="Margin" Value="5,5,8,0" />
+        </Style>
+        <Style x:Key="ValueText" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Margin" Value="5,0,8,5" />
+            <Setter Property="Foreground" Value="Gray" />
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer>
+        <StackPanel>
+            <StackPanel>
+                <TextBlock Style="{StaticResource KeyText}" Text="地图名称" />
+                <TextBlock Style="{StaticResource ValueText}" Text="{x:Bind _map.Name}" />
+
+                <TextBlock Style="{StaticResource KeyText}" Text="作者" />
+                <TextBlock Style="{StaticResource ValueText}" Text="{x:Bind _map.Author}" />
+
+                <TextBlock Style="{StaticResource KeyText}" Text="难度" />
+                <TextBlock Style="{StaticResource ValueText}" Text="{x:Bind _map.DifficultyString}" />
+
+                <TextBlock Style="{StaticResource KeyText}" Text="地图大小" />
+                <TextBlock Style="{StaticResource ValueText}" Text="{x:Bind _map.Size}" />
+
+                <TextBlock Style="{StaticResource KeyText}" Text="上传时间" />
+                <TextBlock Style="{StaticResource ValueText}" Text="{x:Bind _map.UploadTime}" />
+
+                <TextBlock Style="{StaticResource KeyText}" Text="备注" />
+                <TextBlock Style="{StaticResource ValueText}" Text="{x:Bind _map.Notes}" />
+
+                <TextBlock Style="{StaticResource KeyText}" Text="下载直链（有效期较短）" />
+                <TextBlock Style="{StaticResource ValueText}" Text="{x:Bind _map.Url}" />
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

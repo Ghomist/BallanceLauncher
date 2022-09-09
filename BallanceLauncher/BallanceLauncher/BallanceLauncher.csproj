@@ -1,0 +1,163 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>BallanceLauncher</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x86;x64;arm64</Platforms>
+    <RuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+    <DisableXbfGeneration>False</DisableXbfGeneration>
+    <BaseOutputPath>F:\BallanceLauncher\Output</BaseOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="bin\**" />
+    <Compile Remove="external\**" />
+    <Content Remove="bin\**" />
+    <Content Remove="external\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <EmbeddedResource Remove="external\**" />
+    <None Remove="bin\**" />
+    <None Remove="external\**" />
+    <Page Remove="bin\**" />
+    <Page Remove="external\**" />
+    <PRIResource Remove="bin\**" />
+    <PRIResource Remove="external\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="BallanceModInfoReader\BallanceModInfoReader.exe" />
+    <None Remove="BallanceModInfoReader\BML.dll" />
+    <None Remove="Ballance\Ballance.zip" />
+    <None Remove="Ballance\BML-0.3.40.zip" />
+    <None Remove="BlankPage1.xaml" />
+    <None Remove="Pages\AboutPage.xaml" />
+    <None Remove="Pages\BasicConfigPage.xaml" />
+    <None Remove="Pages\ConfigMapsPage.xaml" />
+    <None Remove="Pages\ConfigModsPage.xaml" />
+    <None Remove="Pages\DownloadMapDetailsPage.xaml" />
+    <None Remove="Pages\DownloadPages\InstanceSelectPage.xaml" />
+    <None Remove="Pages\HomePage.xaml" />
+    <None Remove="Pages\InstanceAddPage.xaml" />
+    <None Remove="Pages\InstanceInstallPage.xaml" />
+    <None Remove="Pages\InstanceOverviewPage.xaml" />
+    <None Remove="Pages\InstancesPage.xaml" />
+    <None Remove="Pages\InstanceSubpages\ModDetailsPage.xaml" />
+    <None Remove="Pages\MapDownloadPage.xaml" />
+    <None Remove="Pages\SettingsPage.xaml" />
+    <None Remove="Pages\TestPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BallanceModInfoReader\BallanceModInfoReader.exe">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BallanceModInfoReader\BML.dll" />
+    <EmbeddedResource Include="Ballance\Ballance.zip" />
+    <EmbeddedResource Include="Ballance\BML-0.3.40.zip" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstanceSubpages\InstanceInstallPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\AboutPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\DownloadPages\InstanceSelectPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\DownloadPages\DownloadMapDetailsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstanceSubpages\ConfigPages\ModDetailsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstanceSubpages\ConfigPages\BasicConfigPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstanceSubpages\ConfigPages\ConfigMapsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstanceSubpages\InstanceConfigPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstanceSubpages\ConfigPages\ConfigModsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstanceSubpages\InstanceAddPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstanceSubpages\InstanceOverviewPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstancesPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\HomePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\TestPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\DownloadPages\MapDownloadPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "BallanceLauncher (Package)", "BallanceLauncher\BallanceLauncher (Package)\BallanceLauncher (Package).wapproj", "{CEB238DC-D038-4CD9-A320-0433D38B89D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallanceLauncher", "BallanceLauncher\BallanceLauncher\BallanceLauncher.csproj", "{1C95E225-82F4-4C69-BF7D-C33303373E93}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|arm64 = Debug|arm64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|arm64 = Release|arm64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Debug|arm64.ActiveCfg = Debug|arm64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Debug|arm64.Build.0 = Debug|arm64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Debug|arm64.Deploy.0 = Debug|arm64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Debug|x64.ActiveCfg = Debug|x64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Debug|x64.Build.0 = Debug|x64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Debug|x64.Deploy.0 = Debug|x64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Debug|x86.ActiveCfg = Debug|x86
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Debug|x86.Build.0 = Debug|x86
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Debug|x86.Deploy.0 = Debug|x86
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Release|arm64.ActiveCfg = Release|arm64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Release|arm64.Build.0 = Release|arm64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Release|arm64.Deploy.0 = Release|arm64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Release|x64.ActiveCfg = Release|x64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Release|x64.Build.0 = Release|x64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Release|x64.Deploy.0 = Release|x64
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Release|x86.ActiveCfg = Release|x86
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Release|x86.Build.0 = Release|x86
+		{CEB238DC-D038-4CD9-A320-0433D38B89D2}.Release|x86.Deploy.0 = Release|x86
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Debug|arm64.ActiveCfg = Debug|arm64
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Debug|arm64.Build.0 = Debug|arm64
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Debug|x64.ActiveCfg = Debug|x64
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Debug|x64.Build.0 = Debug|x64
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Debug|x86.ActiveCfg = Debug|x86
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Debug|x86.Build.0 = Debug|x86
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Release|arm64.ActiveCfg = Release|arm64
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Release|arm64.Build.0 = Release|arm64
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Release|x64.ActiveCfg = Release|x64
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Release|x64.Build.0 = Release|x64
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Release|x86.ActiveCfg = Release|x86
+		{1C95E225-82F4-4C69-BF7D-C33303373E93}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0088B9FD-DC2C-45F3-914C-D116F818C6F6}
+	EndGlobalSection
+EndGlobal

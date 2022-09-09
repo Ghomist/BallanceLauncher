@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "BallanceLauncher": {
+      "commandName": "Project",
+      "nativeDebugging": false,
+      "remoteDebugEnabled": false
+    },
+    "BallanceLauncher (Package)": {
+      "commandName": "Project",
+      "nativeDebugging": false,
+      "remoteDebugEnabled": false
+    }
+  }
+}

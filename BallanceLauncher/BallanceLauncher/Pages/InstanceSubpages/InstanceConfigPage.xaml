@@ -1,0 +1,102 @@
+﻿<Page
+    x:Class="BallanceLauncher.Pages.InstanceConfigPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BallanceLauncher.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="ListStyle" TargetType="ListView">
+            <Setter Property="Height" Value="350" />
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="170" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid
+            Padding="0,0,15,0"
+            BorderBrush="#3f3f3f"
+            BorderThickness="0,0,1,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                Grid.Row="0"
+                Margin="10,12,0,0"
+                FontSize="20"
+                FontWeight="Bold"
+                Text="设置" />
+
+            <ListView
+                x:Name="NavLinksList"
+                Grid.Row="1"
+                Margin="0,5,0,0"
+                VerticalAlignment="Stretch"
+                IsItemClickEnabled="True"
+                ItemClick="NavLinksList_ItemClick"
+                SelectionMode="Single">
+                <ListViewItem IsSelected="True">
+                    <StackPanel Orientation="Horizontal" Tag="Basic">
+                        <SymbolIcon Symbol="Repair" />
+                        <TextBlock Margin="12,0,0,0" Text="基本设置" />
+                    </StackPanel>
+                </ListViewItem>
+                <!--<ListViewItem>
+                            <StackPanel Orientation="Horizontal" Tag="BML">
+                                <SymbolIcon Symbol="Flag" />
+                                <TextBlock Margin="12,0,0,0" Text="BML 设置" />
+                            </StackPanel>
+                        </ListViewItem>-->
+                <ListViewItem IsEnabled="{x:Bind _instance.HasBMLInstalled}">
+                    <StackPanel Orientation="Horizontal" Tag="Mods">
+                        <SymbolIcon Symbol="Library" />
+                        <TextBlock Margin="12,0,0,0" Text="Mods" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem IsEnabled="{x:Bind _instance.HasBMLInstalled}">
+                    <StackPanel Orientation="Horizontal" Tag="Maps">
+                        <SymbolIcon Symbol="OutlineStar" />
+                        <TextBlock Margin="12,0,0,0" Text="自定义地图" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem>
+                    <StackPanel Orientation="Horizontal" Tag="Other">
+                        <SymbolIcon Symbol="Setting" />
+                        <TextBlock Margin="12,0,0,0" Text="其它设置" />
+                    </StackPanel>
+                </ListViewItem>
+            </ListView>
+
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock
+                x:Name="SettingHeader"
+                Margin="32,6,0,8"
+                FontSize="32"
+                Text="基本设置" />
+
+            <Frame
+                x:Name="SettingContent"
+                Grid.Row="1"
+                Margin="24,0,0,0"
+                VerticalAlignment="Top" />
+        </Grid>
+
+    </Grid>
+</Page>
