@@ -39,15 +39,14 @@
                     <TextBlock Style="{StaticResource InfoKey}" Text="你给我起的名字" />
                     <TextBox
                         x:Name="NameTextBox"
-                        Style="{StaticResource Info}"
-                        Text="{x:Bind _instance.Name, Mode=TwoWay}"
+                        Text="{x:Bind _instance.Name}"
                         TextChanged="NameTextBox_TextChanged" />
                 </StackPanel>
                 <StackPanel Style="{StaticResource InfoLine}">
                     <TextBlock Style="{StaticResource InfoKey}" Text="我在哪" />
-                    <HyperlinkButton BorderBrush="Gray" Click="BrowseDir">
+                    <Button Click="BrowseDir">
                         <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.Path}" />
-                    </HyperlinkButton>
+                    </Button>
                 </StackPanel>
                 <StackPanel Style="{StaticResource InfoLine}">
                     <TextBlock Style="{StaticResource InfoKey}" Text="BML" />
@@ -63,15 +62,15 @@
                 </StackPanel>-->
                 <StackPanel Style="{StaticResource InfoLine}">
                     <TextBlock Style="{StaticResource InfoKey}" Text="地图在哪" />
-                    <HyperlinkButton BorderBrush="Gray" Click="BrowseMapDir">
+                    <Button Click="BrowseMapDir">
                         <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.MapDir}" />
-                    </HyperlinkButton>
+                    </Button>
                 </StackPanel>
                 <StackPanel Style="{StaticResource InfoLine}">
                     <TextBlock Style="{StaticResource InfoKey}" Text="模组在哪" />
-                    <HyperlinkButton BorderBrush="Gray" Click="BrowseModDir">
+                    <Button Click="BrowseModDir">
                         <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.ModDir}" />
-                    </HyperlinkButton>
+                    </Button>
                 </StackPanel>
                 <StackPanel Style="{StaticResource InfoLine}">
                     <TextBlock Style="{StaticResource InfoKey}" Text="玩的时候开的哪里" />

@@ -49,14 +49,17 @@ namespace BallanceLauncher
 
         private static readonly string s_configSavePath = BaseDir + "config.json";
         private static readonly string s_instancesSavePath = BaseDir + "instances.json";
+        private static readonly string s_exceptionLogPath = BaseDir + "err.log";
 
         public App()
         {
             // avoid 're-open'
-            if (ProcessHelper.HasFormerProcess()) Environment.Exit(1);
+            //if (ProcessHelper.HasFormerProcess()) Environment.Exit(1);
+
+            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
             // extract resources
-            if (!new FileInfo(BaseDir + "BallanceModInfoReader.exe").Exists)
+            if (!File.Exists(BaseDir + "BallanceModInfoReader.exe"))
             {
                 _ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BallanceModInfoReader.exe");
                 _ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BML.dll");
@@ -69,7 +72,7 @@ namespace BallanceLauncher
                 var jsonText = new StreamReader(fs, Encoding.UTF8).ReadToEnd();
                 Config = JsonConvert.DeserializeObject<Config>(jsonText);
             }
-            catch (FileNotFoundException)
+            catch (Exception)
             {
                 Config = new Config();
             }
@@ -80,12 +83,19 @@ namespace BallanceLauncher
                 using var fs = new FileStream(s_instancesSavePath, FileMode.Open, FileAccess.Read, FileShare.Read);
                 var jsonText = new StreamReader(fs, Encoding.UTF8).ReadToEnd();
                 Instances = JsonConvert.DeserializeObject<ObservableCollection<BallanceInstance>>(jsonText);
-                foreach (var instance in Instances)
-                {
-                    if (!instance.EnsureExist()) Instances.Remove(instance);
-                }
+                //foreach (var instance in Instances)
+                //{
+                //    if (!instance.EnsureExist()) Instances.Remove(instance);
+                //}
             }
-            catch (JsonSerializationException)
+            catch (FileNotFoundException)
+            {
+                Instances = new ObservableCollection<BallanceInstance>
+                {
+                    new BallanceInstance("真正的游戏", @"D:\Ballance")
+                };
+            }
+            catch (JsonException)
             {
                 Console.WriteLine("Json 加载失败，重新生成实例列表");
                 // add default game
@@ -165,6 +175,17 @@ namespace BallanceLauncher
 
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
             return (window, hwnd);
+        }
+
+        private void OnUnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        {
+            var log = new FileInfo(s_exceptionLogPath);
+            if (log.Exists) log.Delete();
+
+            using var fs = new FileStream(s_exceptionLogPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
+            using StreamWriter sw = new(fs, Encoding.UTF8);
+            sw.WriteLine(nameof(e.ExceptionObject) + "\n");
+            sw.WriteLine(e.ToString());
         }
 
     }

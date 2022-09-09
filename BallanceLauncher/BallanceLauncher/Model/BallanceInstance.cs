@@ -1,4 +1,5 @@
 ﻿using BallanceLauncher.Utils;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Shapes;
 using Newtonsoft.Json;
 using System;
@@ -38,6 +39,9 @@ namespace BallanceLauncher.Model
             set => _mapDir = value ?? throw new ArgumentNullException(nameof(MapDir));
         }
         public string Executable { get; set; }
+
+        public Visibility ModPropVisibility { get => HasBMLInstalled ? Visibility.Visible : Visibility.Collapsed; }
+        public Visibility MapPropVisibility { get => HasBMLInstalled ? Visibility.Visible : Visibility.Collapsed; }
 
         //public List<BallanceMod> Mods { get; private set; }
         //public List<BallanceMap> Maps { get; private set; }

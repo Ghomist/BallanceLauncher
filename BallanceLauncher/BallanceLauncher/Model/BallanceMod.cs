@@ -20,7 +20,7 @@ namespace BallanceLauncher.Model
         public string DisplayName { get; private set; }
         public string FullName { get; private set; }
         public BallanceModType Type { get; private set; }
-        public bool Enable { get; private set; } // should be set by: SetEnable(bool) {...
+        public bool Enable { get; private set; }
         public bool Exists { get; private set; }
         public bool IsSelected { get; set; } // selected in mod list
 

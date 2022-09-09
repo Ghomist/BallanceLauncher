@@ -196,10 +196,10 @@ namespace BallanceLauncher.Utils
                 ? "未知"
                 : new StringBuilder().Append('★', Difficulty).ToString();
         }
-        private string _notes;
+        private string _notes = "";
         public string Notes
         {
-            get => _notes ?? "暂无描述";
+            get => _notes == "" ? "暂无描述" : _notes;
             set => _notes = value;
         }
         public string UploadTime { get; set; }
