@@ -45,7 +45,7 @@
                 <Span FontStyle="Italic" Foreground="Gray">（其实主要是我想玩 WinUI 3 于是就做了这个小项目哈哈哈）</Span>
             </TextBlock>
             <TextBlock Style="{StaticResource Text}">
-                完整功能列表/教程请自行前往&#160;<Hyperlink NavigateUri="https://github.com/Ghomist">本项目 Github 主页</Hyperlink>
+                完整功能列表/教程请自行前往&#160;<Hyperlink NavigateUri="https://github.com/Ghomist/BallanceLauncher">本项目 Github 主页</Hyperlink>
                 查看，or 自己探索</TextBlock>
 
             <TextBlock Style="{StaticResource Header}" Text="一些有用的链接" />
