@@ -103,6 +103,7 @@ namespace BallanceLauncher.Pages
 
         private async void More_Click(object sender, RoutedEventArgs e)
         {
+            if (_selectedItems.Count != 1) return;
             var mod = _selectedItems[0];
             var page = new ModDetailsPage(mod) { MaxHeight = 350 };
             await DialogHelper.ShowDialogAsync(XamlRoot, title: "Mod 详情", content: page, close: "好的");

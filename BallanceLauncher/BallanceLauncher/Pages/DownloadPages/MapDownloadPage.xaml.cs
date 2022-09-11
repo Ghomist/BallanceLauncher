@@ -25,6 +25,7 @@ namespace BallanceLauncher.Pages
     /// </summary>
     public sealed partial class MapDownloadPage : Page
     {
+        private List<BMap> _maps = new();
         private readonly string _defaultCategory = "全部地图";
         private BMap _selectedMap;
 
@@ -35,26 +36,33 @@ namespace BallanceLauncher.Pages
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            await MapDownloader.FreshInfoAsync();
+            //ContentList.ItemsSource = MapDownloader.Maps;
+            //FreshCategoryButtonList();
 
-            ContentList.ItemsSource = MapDownloader.Maps;
-            FreshCategoryButtonList();
+            // maps
+            _maps = await MapDownloader.GetMapsAsync();
+            ContentList.ItemsSource = _maps;
+
+            // categories
+            var set = new SortedSet<string>();
+            foreach (var map in _maps) set.Add(map.Category);
+            FreshCategoryButtonList(set);
 
             base.OnNavigatedTo(e);
         }
 
-        private void FreshCategoryButtonList()
+        private void FreshCategoryButtonList(ISet<string> categories)
         {
             CategoryList.Items.Clear();
             var defaultItem = new MenuFlyoutItem() { Text = _defaultCategory };
             defaultItem.Click += ChangeCategory;
             CategoryList.Items.Add(defaultItem);
             CategoryList.Items.Add(new MenuFlyoutSeparator());
-            foreach (var category in MapDownloader.MapCollection)
+            foreach (var category in categories)
             {
                 var item = new MenuFlyoutItem()
                 {
-                    Text = category.Category,
+                    Text = category,
                 };
                 item.Click += ChangeCategory;
                 CategoryList.Items.Add(item);
@@ -64,7 +72,7 @@ namespace BallanceLauncher.Pages
 
         private void ReshowMapList()
         {
-            var maps = MapDownloader.Maps;
+            var maps = _maps;
             var currentCategory = CategoryButton.Content.ToString();
             if (currentCategory != _defaultCategory)
                 maps = maps.Where(i => i.Category.Equals(currentCategory)).ToList();

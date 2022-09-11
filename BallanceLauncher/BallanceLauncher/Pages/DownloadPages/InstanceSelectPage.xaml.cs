@@ -33,8 +33,9 @@ namespace BallanceLauncher.Pages
 
             this.InitializeComponent();
 
+            //_instances = instances.Where(i => i.HasBMLInstalled).ToList();
             _instances = instances;
-            List.ItemsSource = instances;
+            List.ItemsSource = _instances;
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)

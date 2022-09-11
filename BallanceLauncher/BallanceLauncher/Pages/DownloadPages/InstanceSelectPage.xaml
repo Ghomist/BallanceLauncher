@@ -15,7 +15,10 @@
                         <ColumnDefinition Width="38" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
-                    <CheckBox Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked" />
+                    <CheckBox
+                        Checked="CheckBox_Checked"
+                        IsEnabled="{x:Bind HasBMLInstalled}"
+                        Unchecked="CheckBox_Unchecked" />
                     <TextBlock
                         Grid.Column="1"
                         Margin="0,5,0,0"
@@ -26,6 +29,11 @@
     </Page.Resources>
 
     <Grid>
-        <ListView x:Name="List" ItemTemplate="{StaticResource InstanceItem}" />
+        <ListView
+            x:Name="List"
+            Grid.Row="1"
+            Margin="0,8,0,8"
+            ItemTemplate="{StaticResource InstanceItem}"
+            SelectionMode="None" />
     </Grid>
 </Page>

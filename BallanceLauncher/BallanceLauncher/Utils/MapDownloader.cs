@@ -1,5 +1,6 @@
 ﻿using BallanceLauncher.Model;
 using Microsoft.UI.Xaml.Media;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,13 @@ namespace BallanceLauncher.Utils
 {
     public class MapDownloader
     {
-        public static List<BMap> Maps { get; private set; } = new();
-        public static List<BMapCategory> MapCollection { get; private set; } = new();
+        private static readonly string s_mapsSavePath = App.BaseDir + "custom_maps.json";
+        private static List<BMap> s_maps = null;
+        private static DateTime s_updateTime = new(0);
 
         private static readonly HttpClient s_client = new(new HttpClientHandler()
         {
-            ServerCertificateCustomValidationCallback = delegate { return false; }
+            //ServerCertificateCustomValidationCallback = delegate { return false; }
         });
         private static readonly string s_referer = "http://cg.ys168.com/f_ht/ajcx/000ht.html?bbh=1134";
         private static readonly List<string> s_excludeString = new() { "Ballance", "自制" };
@@ -65,40 +67,80 @@ namespace BallanceLauncher.Utils
             }
         }
 
-        public static Task FreshInfoAsync() =>
+        public static async ValueTask<List<BMap>> GetMapsAsync()
+        {
+            if (!s_init)
+            {
+                await FreshPatternAsync().ConfigureAwait(false);
+                s_client.DefaultRequestHeaders.Add("Referer", s_referer);
+                s_init = true;
+            }
+
+            if (s_maps == null || (DateTime.UtcNow - s_updateTime).TotalHours > 2)
+            {
+                var success = await TryFetchMapsLocalAsync().ConfigureAwait(false);
+                if (success)
+                    _ = TryFetchMapsOnlineAsync().ConfigureAwait(false);
+                else
+                    await TryFetchMapsOnlineAsync().ConfigureAwait(false);
+            }
+            return s_maps;
+        }
+
+        private static Task<bool> TryFetchMapsLocalAsync() =>
             Task.Run(async () =>
             {
-                if (!s_init)
+                var f = new FileInfo(s_mapsSavePath);
+                if (f.Exists)
                 {
-                    await FreshPatternAsync().ConfigureAwait(false);
-                    s_client.DefaultRequestHeaders.Add("Referer", s_referer);
-                    s_init = true;
-                }
+                    if ((DateTime.UtcNow - f.LastWriteTimeUtc).TotalHours <= 2) // read from local
+                    {
+                        string jsonText = "";
+                        try
+                        {
+                            using var fs = new FileStream(s_mapsSavePath, FileMode.OpenOrCreate, FileAccess.Read);
+                            using var sr = new StreamReader(fs, Encoding.UTF8);
+                            jsonText = await sr.ReadToEndAsync().ConfigureAwait(false);
+                        }
+                        catch (Exception) { }
 
+                        if (jsonText != "")
+                        {
+                            s_maps = JsonConvert.DeserializeObject<List<BMap>>(jsonText);
+                            s_updateTime = DateTime.UtcNow;
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            });
+
+        private static Task TryFetchMapsOnlineAsync() =>
+            Task.Run(async () =>
+            {
                 var indexPage = await GetYsPageContent(s_ysIndexPage).ConfigureAwait(false);
-                Maps.Clear();
-                MapCollection.Clear();
+                s_maps ??= new();
+                s_maps.Clear();
+
                 foreach (Match match in Regex.Matches(indexPage, s_categoryRegex))
                 {
-                    var categoryString = match.Groups[2].Value;
-                    foreach (var str in s_excludeString) categoryString = categoryString.Replace(str, "");
-                    var category = new BMapCategory
-                    {
-                        ID = match.Groups[1].Value,
-                        Category = categoryString,
-                        Notes = match.Groups[3].Value
-                    };
+                    var categoryText = match.Groups[2].Value;
+                    var categoryID = match.Groups[1].Value;
+
+                    // exclude some text
+                    foreach (var text in s_excludeString) categoryText = categoryText.Replace(text, "");
+
                     // filter
-                    if (!categoryString.Contains("图") && !categoryString.Contains("竞速")) continue;
+                    if (!categoryText.Contains("图") && !categoryText.Contains("竞速")) continue;
+
                     // find maps
-                    var mapListPage = await GetYsPageContent(s_ysFileListPage.Replace("{category}", category.ID));
-                    var maps = new List<BMap>();
+                    var mapListPage = await GetYsPageContent(s_ysFileListPage.Replace("{category}", categoryID));
                     foreach (Match match1 in Regex.Matches(mapListPage, s_fileRegex))
                     {
                         int difficulty = match1.Groups[5].Value.Count(c => c == '★');
                         var map = new BMap
                         {
-                            Index = Maps.Count,
+                            Index = s_maps.Count,
                             Url = match1.Groups[1].Value,
                             Name = match1.Groups[2].Value,
                             Size = match1.Groups[3].Value,
@@ -106,22 +148,25 @@ namespace BallanceLauncher.Utils
                             Difficulty = difficulty,
                             Notes = match1.Groups[6].Value,
                             UploadTime = match1.Groups[7].Value,
-                            Category = categoryString
+                            Category = categoryText
                         };
                         if (!map.Name.EndsWith(".nmo", StringComparison.OrdinalIgnoreCase)) continue;
                         map.Name = map.Name.Replace(".level", "", StringComparison.OrdinalIgnoreCase)
                             .Replace(".nmo", "", StringComparison.OrdinalIgnoreCase);
 
-                        maps.Add(map);
-                        Maps.Add(map);
+                        s_maps.Add(map);
                     }
-                    category.Maps = maps;
-                    // add to collection
-                    MapCollection.Add(category);
                 }
+                // save to json
+                using var fs = new FileStream(s_mapsSavePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
+                using var sw = new StreamWriter(fs, Encoding.UTF8);
+                string j = JsonConvert.SerializeObject(s_maps, Formatting.None);
+                await sw.WriteAsync(j).ConfigureAwait(false);
+
+                s_updateTime = DateTime.UtcNow;
             });
 
-        public static Task DownloadMap(string url, string mapName, List<BallanceInstance> instances) =>
+        public static Task<bool> DownloadMap(string url, string mapName, List<BallanceInstance> instances) =>
             Task.Run(async () =>
             {
                 //await App.Window.TellDownloadBeginAsync();
@@ -134,8 +179,8 @@ namespace BallanceLauncher.Utils
                 try
                 {
                     using var fs = new FileStream(temp, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
-                    using var stream = await s_client.GetStreamAsync(url);
-                    await stream.CopyToAsync(fs);
+                    using var stream = await s_client.GetStreamAsync(url).ConfigureAwait(false);
+                    await stream.CopyToAsync(fs).ConfigureAwait(false);
 
                     tempFile.Refresh();
                     if (tempFile.Exists)
@@ -147,11 +192,13 @@ namespace BallanceLauncher.Utils
                         }
                         tempFile.Delete();
                     }
+                    return true;
                 }
                 catch (Exception)
                 {
                     //DialogHelper.ShowErrorMessageAsync(App.Window.Content.XamlRoot,
                     //    "哇啊我不知道怎么就下载失败了！要不你自己试一试呢？");
+                    return false;
                 }
                 finally
                 {
@@ -167,15 +214,6 @@ namespace BallanceLauncher.Utils
             var rawContent = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
             return HttpUtility.HtmlDecode(rawContent);
         }
-    }
-
-    public class BMapCategory
-    {
-        public string ID { get; set; }
-        public string Category { get; set; }
-        public string Notes { get; set; }
-        public List<BMap> Maps { get; set; }
-
     }
 
     public class BMap
@@ -203,12 +241,5 @@ namespace BallanceLauncher.Utils
             set => _notes = value;
         }
         public string UploadTime { get; set; }
-        public Brush Background
-        {
-            get => new SolidColorBrush()
-            {
-                Color = (Index & 1) == 0 ? s_light : s_dark
-            };
-        }
     }
 }

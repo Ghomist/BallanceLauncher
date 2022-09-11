@@ -9,7 +9,7 @@
     mc:Ignorable="d">
     <Page.Resources>
         <DataTemplate x:Key="Map" x:DataType="util:BMap">
-            <ListViewItem Background="{x:Bind Background}">
+            <ListViewItem>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="140" />
