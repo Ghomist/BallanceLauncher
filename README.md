@@ -38,6 +38,10 @@
 
 目前应用中的文字（中文）均直接内嵌编译，不确定是否会因编码问题造成显示错误，后续若推广至中文社区以外，则考虑独立出语言包
 
+### 排错
+
+浏览本地文件（夹）等操作在以管理员身份运行时可能会造成闪退，系 WinUI 3 的 bug，对应的 [issue](https://github.com/microsoft/WindowsAppSDK/issues/2504) 有讨论
+
 ## 自行编译
 
 ### 查看源代码
@@ -51,6 +55,7 @@ NuGet
 
 -   [Microsoft.WindowsAppSDK](https://github.com/microsoft/windowsappsdk) 1.1.4
 -   [Newtonsoft.Json](https://www.newtonsoft.com/json) 13.0.1
+-   [WpfCore.FolderPicker](https://github.com/dove-team/WpfCore.FolderPicker) 1.0.0
 
 其它依赖
 

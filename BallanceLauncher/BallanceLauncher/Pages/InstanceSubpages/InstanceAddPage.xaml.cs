@@ -12,6 +12,8 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -31,21 +33,23 @@ namespace BallanceLauncher.Pages
             this.InitializeComponent();
         }
 
-        private async void Browser_Click(object sender, RoutedEventArgs e)
+        private void Browser_Click(object sender, RoutedEventArgs e)
         {
-            var picker = new Windows.Storage.Pickers.FolderPicker
-            {
-                //picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop
-            };
-            picker.FileTypeFilter.Add("*");
-            WinRT.Interop.InitializeWithWindow.Initialize(picker, App.Hwnd);
+            var picker = new WpfCore.FolderPicker.FolderBrowserDialog();
 
-            var folder = await picker.PickSingleFolderAsync();
-            if (folder != null)
+            var result = picker.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
             {
-                SelectedFolder.Text = folder.Path;
-                if (NameText.Text == "") NameText.Text = folder.Name;
+                string folder = picker.Folder;
+
+                if (folder != null)
+                {
+                    DispatcherQueue.TryEnqueue(() =>
+                    {
+                        SelectedFolder.Text = folder;
+                        if (NameText.Text == "") NameText.Text = folder.Split('\\')[^1];
+                    });
+                }
             }
         }
 

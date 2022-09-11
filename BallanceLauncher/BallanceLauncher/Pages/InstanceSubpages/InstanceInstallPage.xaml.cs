@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Text.RegularExpressions;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -37,8 +38,27 @@ namespace BallanceLauncher.Pages
             base.OnNavigatedTo(e);
         }
 
-        private async void Browser_Click(object sender, RoutedEventArgs e)
+        private void Browser_Click(object sender, RoutedEventArgs e)
         {
+            var picker = new WpfCore.FolderPicker.FolderBrowserDialog();
+
+            var result = picker.ShowDialog();
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                string folder = picker.Folder;
+
+                if (folder != null)
+                {
+                    DispatcherQueue.TryEnqueue(() =>
+                    {
+                        SelectedFolder.Text = folder;
+                        if (NameText.Text == "") NameText.Text = folder.Split('\\')[^1];
+                    });
+                }
+            }
+
+            /* FolderPicker cannot work when running as admin
+             * 
             var picker = new Windows.Storage.Pickers.FolderPicker
             {
                 //picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
@@ -53,16 +73,32 @@ namespace BallanceLauncher.Pages
                 SelectedFolder.Text = folder.Path;
                 if (NameText.Text == "") NameText.Text = folder.Name;
             }
+            */
         }
 
         private async void Submit_Click(object sender, RoutedEventArgs e)
         {
             var name = NameText.Text;
             var path = SelectedFolder.Text;
+
+            if (path == "")
+            {
+                DispatcherQueue.TryEnqueue(async () =>
+                    await DialogHelper.ShowErrorMessageAsync(XamlRoot, "一定要填路径啊喂！").ConfigureAwait(false));
+                return;
+            }
+
+            if (!Regex.IsMatch(path, "[a-zA-Z]:[/\\\\]{1,2}.*"))
+            {
+                DispatcherQueue.TryEnqueue(async () =>
+                    await DialogHelper.ShowErrorMessageAsync(XamlRoot, "路径有问题呀？要使用绝对路径哦").ConfigureAwait(false));
+                return;
+            }
+
             await FileHelper.ExtractBallance(path).ConfigureAwait(false);
             var newInstance = await _instancesPage.AddBallanceAsync(path, name).ConfigureAwait(false);
             if (newInstance != null)
-                await newInstance.InstallBMLAsync();
+                await newInstance.InstallBMLAsync().ConfigureAwait(false);
         }
     }
 }
