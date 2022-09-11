@@ -74,7 +74,7 @@ namespace BallanceLauncher
             }
             catch (Exception)
             {
-                Config = new Config();
+                Config = new();
             }
 
             // read instances
@@ -88,18 +88,9 @@ namespace BallanceLauncher
                 //    if (!instance.EnsureExist()) Instances.Remove(instance);
                 //}
             }
-            catch (FileNotFoundException)
+            catch (Exception)
             {
-                Instances = new ObservableCollection<BallanceInstance>
-                {
-                    new BallanceInstance("真正的游戏", @"D:\Ballance")
-                };
-            }
-            catch (JsonException)
-            {
-                Console.WriteLine("Json 加载失败，重新生成实例列表");
-                // add default game
-                Instances = new ObservableCollection<BallanceInstance>
+                Instances = new()
                 {
                     new BallanceInstance("真正的游戏", @"D:\Ballance")
                 };
