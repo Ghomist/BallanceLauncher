@@ -18,7 +18,7 @@ namespace BallanceLauncher.Utils
         {
             string secondaryText = secondary ? "不要" : null;
             string closeText = close ? "我再想想" : null;
-            return await ShowDialogAsync(root, title, content, "好的", secondaryText, closeText, ContentDialogButton.Primary);
+            return await ShowDialogAsync(root, title, content, "好的", secondaryText, closeText, ContentDialogButton.Primary).ConfigureAwait(false);
         }
 
         public static Task ShowErrorMessageAsync(XamlRoot root, string content, bool canCopy = false)
@@ -45,11 +45,10 @@ namespace BallanceLauncher.Utils
                     CloseButtonText = close,
                     DefaultButton = defaultButton,
                     Content = content is string text
-                    ? new TextBox()
-                    {
-                        Text = text,
-                        IsReadOnly = canCopy
-                    }
+                    ? (canCopy
+                        ? new TextBox() { Text = text, IsReadOnly = true }
+                        : new TextBlock() { Text = text }
+                    )
                     : content,
                 };
 

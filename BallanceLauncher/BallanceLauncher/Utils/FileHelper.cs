@@ -47,7 +47,6 @@ namespace BallanceLauncher.Utils
                 zipFile.Delete();
             });
 
-
         public static Task<(string, string)> ExtractModAsync(string fullName, string displayName) =>
             Task.Run(() =>
             {
@@ -70,23 +69,18 @@ namespace BallanceLauncher.Utils
                 return (tempPath, mod.FullName);
             });
 
-
-        public static Task ExtractResourceAsync(string resourcePath, string resourceName, string fullName = null)
-        {
-            fullName ??= App.BaseDir + resourceName;
-            var resource = "BallanceLauncher." + resourcePath + "." + resourceName;
-            var assembly = Assembly.GetExecutingAssembly();
-            var input = new BufferedStream(assembly.GetManifestResourceStream(resource));
-            using var output = new FileStream(fullName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-            return input.CopyToAsync(output);
-            //byte[] data = new byte[1024];
-            //int lengthEachRead;
-            //while ((lengthEachRead = input.Read(data, 0, data.Length)) > 0)
-            //{
-            //    output.Write(data, 0, lengthEachRead);
-            //}
-            //output.Flush();
-        }
+        public static Task ExtractResourceAsync(string resourcePath, string resourceName, string fullName = null) =>
+            Task.Run(async () =>
+            {
+                fullName ??= App.BaseDir + resourceName;
+                var resource = "BallanceLauncher." + resourcePath + "." + resourceName;
+                var assembly = Assembly.GetExecutingAssembly();
+                using (var input = new BufferedStream(assembly.GetManifestResourceStream(resource)))
+                {
+                    using var output = new FileStream(fullName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                    await input.CopyToAsync(output).ConfigureAwait(false);
+                }
+            });
 
         public static void DeleteModTemp(string extractedPath)
         {

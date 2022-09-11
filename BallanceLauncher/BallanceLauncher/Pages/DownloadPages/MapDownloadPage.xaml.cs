@@ -107,9 +107,9 @@ namespace BallanceLauncher.Pages
                 if (result2 == ContentDialogResult.Primary)
                 {
                     if (page2.SelectedItems.Count == 0)
-                        await DialogHelper.ShowErrorMessageAsync(XamlRoot, "至少要选一个呢！");
+                        await DialogHelper.ShowErrorMessageAsync(XamlRoot, "至少要选一个呢！").ConfigureAwait(false);
                     else
-                        await MapDownloader.DownloadMap(_selectedMap.Url, _selectedMap.Name, page2.SelectedItems);
+                        await MapDownloader.DownloadMap(_selectedMap.Url, _selectedMap.Name, page2.SelectedItems).ConfigureAwait(false);
                 }
             }
         }

@@ -62,43 +62,46 @@ namespace BallanceLauncher.Pages
                     _currentPage = last;
                 });
 
-        public async Task<BallanceInstance> AddBallanceAsync(string instancePath, string instanceName)
-        {
-            string path = instancePath;
-            string name = instanceName == "" ? "Ballance" : instanceName;
-            if (!BallanceInstance.EnsureBallancePath(path))
+        public Task<BallanceInstance> AddBallanceAsync(string instancePath, string instanceName) =>
+            Task.Run(() =>
             {
-                await DialogHelper.ShowErrorMessageAsync(XamlRoot, path == null ? "一定要填路径啊喂！" : "Ballance 路径有问题呀？");
-                return null;
-            }
-            foreach (var instance in App.Instances)
-            {
-                if (instance.Path == path)
+                string path = instancePath;
+                string name = instanceName == "" ? "Ballance" : instanceName;
+                if (!BallanceInstance.EnsureBallancePath(path))
                 {
-                    await DialogHelper.ShowErrorMessageAsync(XamlRoot, "这份 Ballance 已经添加过了哈");
+                    DispatcherQueue.TryEnqueue(async () =>
+                        await DialogHelper.ShowErrorMessageAsync(XamlRoot, path == null ? "一定要填路径啊喂！" : "Ballance 路径有问题呀？").ConfigureAwait(false));
                     return null;
                 }
-            }
-            bool hasSameName;
-            int nameIndex = -1;
-            string testName;
-            do
-            {
-                hasSameName = false;
-                nameIndex++;
-                testName = name + (nameIndex == 0 ? "" : "~" + nameIndex.ToString());
                 foreach (var instance in App.Instances)
-                    if (instance.Name == testName)
-                        hasSameName = true;
-            }
-            while (hasSameName);
+                {
+                    if (instance.Path == path)
+                    {
+                        DispatcherQueue.TryEnqueue(async () =>
+                            await DialogHelper.ShowErrorMessageAsync(XamlRoot, "这份 Ballance 已经添加过了哈").ConfigureAwait(false));
+                        return null;
+                    }
+                }
+                bool hasSameName;
+                int nameIndex = -1;
+                string testName;
+                do
+                {
+                    hasSameName = false;
+                    nameIndex++;
+                    testName = name + (nameIndex == 0 ? "" : "~" + nameIndex.ToString());
+                    foreach (var instance in App.Instances)
+                        if (instance.Name == testName)
+                            hasSameName = true;
+                }
+                while (hasSameName);
 
-            var newInstance = new BallanceInstance(testName, path);
-            DispatcherQueue.TryEnqueue(() => App.Instances.Add(newInstance));
-            NavigateToLast();
+                var newInstance = new BallanceInstance(testName, path);
+                DispatcherQueue.TryEnqueue(() => App.Instances.Add(newInstance));
+                NavigateToLast();
 
-            return newInstance;
-        }
+                return newInstance;
+            });
 
         private void NavigationView_Loaded(object sender, RoutedEventArgs e)
         {
