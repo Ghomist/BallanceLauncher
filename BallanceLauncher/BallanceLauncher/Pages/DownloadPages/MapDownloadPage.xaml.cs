@@ -8,10 +8,12 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Contacts;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -25,8 +27,9 @@ namespace BallanceLauncher.Pages
     /// </summary>
     public sealed partial class MapDownloadPage : Page
     {
-        private List<BMap> _maps = new();
+        private List<BMap> _maps;
         private readonly string _defaultCategory = "全部地图";
+        private SortType _sortType = SortType.Category;
         private BMap _selectedMap;
 
         public MapDownloadPage()
@@ -36,23 +39,25 @@ namespace BallanceLauncher.Pages
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            //ContentList.ItemsSource = MapDownloader.Maps;
-            //FreshCategoryButtonList();
+            base.OnNavigatedTo(e);
+
+            LoadingRing.IsActive = true;
 
             // maps
             _maps = await MapDownloader.GetMapsAsync();
-            ContentList.ItemsSource = _maps;
+            ReshowMapList();
 
             // categories
-            var set = new SortedSet<string>();
-            foreach (var map in _maps) set.Add(map.Category);
-            FreshCategoryButtonList(set);
+            FreshCategoryButtonList();
 
-            base.OnNavigatedTo(e);
+            LoadingRing.IsActive = false;
         }
 
-        private void FreshCategoryButtonList(ISet<string> categories)
+        private void FreshCategoryButtonList()
         {
+            var categories = new SortedSet<string>();
+            foreach (var map in _maps) categories.Add(map.Category);
+
             CategoryList.Items.Clear();
             var defaultItem = new MenuFlyoutItem() { Text = _defaultCategory };
             defaultItem.Click += ChangeCategory;
@@ -72,17 +77,29 @@ namespace BallanceLauncher.Pages
 
         private void ReshowMapList()
         {
-            var maps = _maps;
+            IEnumerable<BMap> filter = _maps;
+
             var currentCategory = CategoryButton.Content.ToString();
             if (currentCategory != _defaultCategory)
-                maps = maps.Where(i => i.Category.Equals(currentCategory)).ToList();
+                filter = filter.Where(i => i.Category.Equals(currentCategory));
 
-            maps = maps.Where(i =>
+            filter = filter
+                .Where(i =>
                    i.Name.Contains(NameFilter.Text, StringComparison.OrdinalIgnoreCase) &&
-                   i.Author.Contains(AuthorFilter.Text, StringComparison.OrdinalIgnoreCase)
-               ).Select((i, j) => { i.Index = j; return i; }).ToList();
+                   i.Author.Contains(AuthorFilter.Text, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(i =>
+                    _sortType switch
+                    {
+                        SortType.Category => i.Category,
+                        SortType.Name => i.Name,
+                        SortType.Author => i.Author,
+                        SortType.Date => i.UploadTime,
+                        SortType.Difficulty => i.Difficulty.ToString(),
+                        _ => i.Category
+                    }
+                );
 
-            ContentList.ItemsSource = maps;
+            ContentList.ItemsSource = filter;
         }
 
         private void ChangeCategory(object sender, RoutedEventArgs args)
@@ -115,9 +132,13 @@ namespace BallanceLauncher.Pages
                 if (result2 == ContentDialogResult.Primary)
                 {
                     if (page2.SelectedItems.Count == 0)
+                    {
                         await DialogHelper.ShowErrorMessageAsync(XamlRoot, "至少要选一个呢！").ConfigureAwait(false);
+                    }
                     else
+                    {
                         await MapDownloader.DownloadMap(_selectedMap.Url, _selectedMap.Name, page2.SelectedItems).ConfigureAwait(false);
+                    }
                 }
             }
         }
@@ -133,5 +154,24 @@ namespace BallanceLauncher.Pages
                 _selectedMap = null;
             }
         }
+
+        private async void ForceFresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadingRing.IsActive = true;
+
+            _maps = await MapDownloader.GetMapsAsync(force: true);
+
+            // categories
+            FreshCategoryButtonList();
+
+            NameFilter.Text = "";
+            AuthorFilter.Text = "";
+
+            ReshowMapList();
+
+            LoadingRing.IsActive = false;
+        }
+
+        enum SortType { Category, Name, Author, Date, Difficulty }
     }
 }

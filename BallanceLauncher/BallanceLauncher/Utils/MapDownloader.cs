@@ -18,6 +18,8 @@ namespace BallanceLauncher.Utils
 {
     public class MapDownloader
     {
+        public static bool MapListFreshing { get; private set; } = false;
+
         private static readonly string s_mapsSavePath = App.BaseDir + "custom_maps.json";
         private static List<BMap> s_maps = null;
         private static DateTime s_updateTime = new(0);
@@ -67,8 +69,10 @@ namespace BallanceLauncher.Utils
             }
         }
 
-        public static async ValueTask<List<BMap>> GetMapsAsync()
+        public static async ValueTask<List<BMap>> GetMapsAsync(bool force = false)
         {
+            MapListFreshing = true;
+
             if (!s_init)
             {
                 await FreshPatternAsync().ConfigureAwait(false);
@@ -76,14 +80,19 @@ namespace BallanceLauncher.Utils
                 s_init = true;
             }
 
+            if (force)
+            {
+                await TryFetchMapsOnlineAsync().ConfigureAwait(false);
+                return s_maps;
+            }
+
             if (s_maps == null || (DateTime.UtcNow - s_updateTime).TotalHours > 2)
             {
                 var success = await TryFetchMapsLocalAsync().ConfigureAwait(false);
-                if (success)
-                    _ = TryFetchMapsOnlineAsync().ConfigureAwait(false);
-                else
+                if (!success)
                     await TryFetchMapsOnlineAsync().ConfigureAwait(false);
             }
+            MapListFreshing = false;
             return s_maps;
         }
 

@@ -72,6 +72,18 @@
                 地图下载源：<LineBreak />
                 <Hyperlink NavigateUri="http://ballancemaps.ysepan.com/">Ballance 地图下载站</Hyperlink>
             </TextBlock>
+            <StackPanel Margin="0,10,20,0" Orientation="Horizontal">
+                <Button
+                    x:Name="ForceFresh"
+                    Margin="0,10,20,0"
+                    Click="ForceFresh_Click"
+                    Content="强制刷新"
+                    IsEnabled="{x:Bind LoadingRing.IsActive, Mode=OneWay}" />
+                <ProgressRing
+                    x:Name="LoadingRing"
+                    Margin="0,10,20,0"
+                    IsActive="False" />
+            </StackPanel>
         </StackPanel>
         <Grid Grid.Column="1" Margin="10">
             <Grid.RowDefinitions>
