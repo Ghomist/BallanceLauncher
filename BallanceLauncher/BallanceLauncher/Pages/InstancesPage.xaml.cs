@@ -62,7 +62,7 @@ namespace BallanceLauncher.Pages
             {
                 UpdateInstances();
                 ContentFrame.Navigate(typeof(InstanceOverviewPage), this, s_slideFromLeft);
-                NavView.SelectedItem = NavView.MenuItems[1];
+                NavView.SelectedItem = NavView.MenuItems[0];
                 _currentPage = OVERVIEW_PG;
             });
 

@@ -44,7 +44,9 @@ namespace BallanceLauncher
         public static IntPtr Hwnd { get; private set; }
         public static Config Config { get; private set; }
 
-        public static string BaseDir { get => AppDomain.CurrentDomain.BaseDirectory; }
+        public static string BaseDir => AppDomain.CurrentDomain.BaseDirectory;
+        public static StorageFolder LocalFolder => ApplicationData.Current.LocalFolder;
+        public static ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
         private static App _appInstance;
         private static Process _runningInstance;
@@ -52,8 +54,6 @@ namespace BallanceLauncher
         private static readonly string s_configSavePath = "config.json";
         private static readonly string s_instancesSavePath = "instances.json";
         private static readonly string s_exceptionLogPath = "err.log";
-
-        private static readonly StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
         public App()
         {
@@ -73,8 +73,7 @@ namespace BallanceLauncher
             // read configuration
             try
             {
-                var configFile = localFolder.GetFileAsync(s_configSavePath).GetAwaiter().GetResult();
-                var jsonText = FileIO.ReadTextAsync(configFile).GetAwaiter().GetResult();
+                var jsonText = FileHelper.ReadLocalFileAsync(s_configSavePath).GetAwaiter().GetResult();
                 if (jsonText == null || jsonText == "")
                 {
                     Config = new();
@@ -89,8 +88,7 @@ namespace BallanceLauncher
             // read instances
             try
             {
-                var instancesFile = localFolder.GetFileAsync(s_instancesSavePath).GetAwaiter().GetResult();
-                var jsonText = FileIO.ReadTextAsync(instancesFile).GetAwaiter().GetResult();
+                var jsonText = FileHelper.ReadLocalFileAsync(s_instancesSavePath).GetAwaiter().GetResult();
                 Instances = JsonConvert.DeserializeObject<ObservableCollection<BallanceInstance>>(jsonText);
                 for (int i = Instances.Count - 1; i >= 0; --i)
                 {
@@ -138,16 +136,11 @@ namespace BallanceLauncher
             }
         }
 
-        public static Task SaveAll() =>
+        public static Task SaveConfigAsync() =>
             Task.Run(async () =>
             {
-                // save configuration
-                var configFile = await localFolder.CreateFileAsync(s_configSavePath, CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(configFile, JsonConvert.SerializeObject(Config));
-
-                // save instances
-                var instancesFile = await localFolder.CreateFileAsync(s_instancesSavePath, CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(instancesFile, JsonConvert.SerializeObject(Instances));
+                await FileHelper.WriteLocalFileAsync(s_configSavePath, JsonConvert.SerializeObject(Config)).ConfigureAwait(false);
+                await FileHelper.WriteLocalFileAsync(s_instancesSavePath, JsonConvert.SerializeObject(Instances));
             });
 
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) =>
@@ -162,12 +155,6 @@ namespace BallanceLauncher
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
             return (window, hwnd);
         }
-
-        //private async Task OnUnhandledException(object sender, System.UnhandledExceptionEventArgs e)
-        //{
-        //    var errFile = await localFolder.CreateFileAsync(s_exceptionLogPath, CreationCollisionOption.ReplaceExisting);
-        //    await FileIO.WriteTextAsync(errFile, e.ToString());
-        //}
 
     }
 }

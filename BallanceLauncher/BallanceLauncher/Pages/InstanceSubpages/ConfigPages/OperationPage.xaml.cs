@@ -69,10 +69,13 @@ namespace BallanceLauncher.Pages
                 "确认移除吗？", "该操作不会删除本地游戏文件，仅移除启动器内实例", close: true);
             if (result == ContentDialogResult.Primary)
             {
+                var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "移除 " + _instance.Name);
+
                 App.Instances.Remove(_instance);
                 _parentPage.NavigateToOverview();
-            }
 
+                DialogHelper.FinishProcessingDialog(dlg, "搞定！");
+            }
         }
 
         private async void Uninstall_Click(object sender, RoutedEventArgs e)
@@ -81,9 +84,13 @@ namespace BallanceLauncher.Pages
                 "要卸载吗？！", "该操作会永久删除本地游戏文件！", close: true);
             if (result == ContentDialogResult.Primary)
             {
+                var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "卸载 " + _instance.Name);
+
                 _instance.Delete();
                 App.Instances.Remove(_instance);
                 _parentPage.NavigateToOverview();
+
+                DialogHelper.FinishProcessingDialog(dlg, "搞定！");
             }
         }
     }

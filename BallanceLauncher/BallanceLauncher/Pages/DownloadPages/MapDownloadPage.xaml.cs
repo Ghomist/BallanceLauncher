@@ -42,15 +42,14 @@ namespace BallanceLauncher.Pages
             base.OnNavigatedTo(e);
 
             LoadingRing.IsActive = true;
+            ForceFresh.IsEnabled = false;
 
-            // maps
             _maps = await MapDownloader.GetMapsAsync();
+            FreshCategoryButtonList();
             ReshowMapList();
 
-            // categories
-            FreshCategoryButtonList();
-
             LoadingRing.IsActive = false;
+            ForceFresh.IsEnabled = true;
         }
 
         private void FreshCategoryButtonList()
@@ -137,7 +136,9 @@ namespace BallanceLauncher.Pages
                     }
                     else
                     {
-                        await MapDownloader.DownloadMap(_selectedMap.Url, _selectedMap.Name, page2.SelectedItems).ConfigureAwait(false);
+                        var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "下载地图");
+                        await MapDownloader.DownloadMap(_selectedMap.Url, _selectedMap.Name, page2.SelectedItems);
+                        DialogHelper.FinishProcessingDialog(dlg, "下载好啦！");
                     }
                 }
             }
@@ -158,6 +159,7 @@ namespace BallanceLauncher.Pages
         private async void ForceFresh_Click(object sender, RoutedEventArgs e)
         {
             LoadingRing.IsActive = true;
+            ForceFresh.IsEnabled = false;
 
             _maps = await MapDownloader.GetMapsAsync(force: true);
 
@@ -170,6 +172,7 @@ namespace BallanceLauncher.Pages
             ReshowMapList();
 
             LoadingRing.IsActive = false;
+            ForceFresh.IsEnabled = true;
         }
 
         enum SortType { Category, Name, Author, Date, Difficulty }

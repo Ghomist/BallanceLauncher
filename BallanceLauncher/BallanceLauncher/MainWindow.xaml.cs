@@ -161,7 +161,7 @@ namespace BallanceLauncher
 
         private void Window_Closed(object sender, WindowEventArgs args)
         {
-            App.SaveAll().GetAwaiter().GetResult();
+            App.SaveConfigAsync().GetAwaiter().GetResult();
             //Config.SaveAll();
             // remove temp
             FileHelper.DeleteTemp();

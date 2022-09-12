@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Reflection;
 using BallanceLauncher.Model;
+using Windows.Storage;
+using Newtonsoft.Json;
 
 namespace BallanceLauncher.Utils
 {
@@ -75,12 +77,45 @@ namespace BallanceLauncher.Utils
                 fullName ??= App.BaseDir + resourceName;
                 var resource = "BallanceLauncher." + resourcePath + "." + resourceName;
                 var assembly = Assembly.GetExecutingAssembly();
-                using (var input = new BufferedStream(assembly.GetManifestResourceStream(resource)))
+
+                using var input = new BufferedStream(assembly.GetManifestResourceStream(resource));
+                using var output = new FileStream(fullName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                await input.CopyToAsync(output).ConfigureAwait(false);
+            });
+
+        public static Task<string> ReadLocalFileAsync(string fileName)
+        {
+            return Task.Run(async () =>
+            {
+                var f = await App.LocalFolder.GetFileAsync(fileName);
+                return await FileIO.ReadTextAsync(f);
+            });
+        }
+
+        public static Task<DateTime> GetConfigModifiedTimeAsync(string fileName)
+        {
+            return Task.Run(async () =>
+            {
+                try
                 {
-                    using var output = new FileStream(fullName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-                    await input.CopyToAsync(output).ConfigureAwait(false);
+                    var f = await App.LocalFolder.GetFileAsync(fileName);
+                    return File.GetLastWriteTimeUtc(f.Path);
+                }
+                catch (FileNotFoundException)
+                {
+                    return DateTime.MinValue;
                 }
             });
+        }
+
+        public static Task WriteLocalFileAsync(string fileName, string content)
+        {
+            return Task.Run(async () =>
+            {
+                var configFile = await App.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(configFile, content);
+            });
+        }
 
         public static void DeleteModTemp(string extractedPath)
         {

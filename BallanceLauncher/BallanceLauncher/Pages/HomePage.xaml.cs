@@ -33,7 +33,9 @@ namespace BallanceLauncher.Pages
         public HomePage()
         {
             this.InitializeComponent();
-            InstanceName.Text = App.Instances[0].Name;
+            string defaultInstanceName = (string)App.LocalSettings.Values["defaultBallance"];
+            var instance = App.Instances.FirstOrDefault(i => i.Name == defaultInstanceName);
+            InstanceName.Text = instance != null ? instance.Name : "";
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -46,12 +48,17 @@ namespace BallanceLauncher.Pages
         private async void StartButton_Click(SplitButton sender, SplitButtonClickEventArgs e)
         {
             var instance = App.Instances.FirstOrDefault(i => i.Name == InstanceName.Text);
-            await App.RunBallanceAsync(instance);
+            if (instance != null)
+            {
+                await App.RunBallanceAsync(instance);
+            }
         }
 
         private void OnItemClick(object sender, RoutedEventArgs e)
         {
-            InstanceName.Text = (sender as MenuFlyoutItem).Text;
+            var text = (sender as MenuFlyoutItem).Text;
+            InstanceName.Text = text;
+            App.LocalSettings.Values["defaultBallance"] = text;
         }
 
         private void UpdateInstanceList()

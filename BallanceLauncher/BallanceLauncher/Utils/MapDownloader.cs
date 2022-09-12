@@ -20,7 +20,7 @@ namespace BallanceLauncher.Utils
     {
         public static bool MapListFreshing { get; private set; } = false;
 
-        private static readonly string s_mapsSavePath = App.BaseDir + "custom_maps.json";
+        private static readonly string s_mapsSavePath = "custom_maps.json";
         private static List<BMap> s_maps = null;
         private static DateTime s_updateTime = new(0);
 
@@ -99,28 +99,19 @@ namespace BallanceLauncher.Utils
         private static Task<bool> TryFetchMapsLocalAsync() =>
             Task.Run(async () =>
             {
-                var f = new FileInfo(s_mapsSavePath);
-                if (f.Exists)
+                DateTime modifiedTime = await FileHelper.GetConfigModifiedTimeAsync(s_mapsSavePath).ConfigureAwait(false);
+                if ((DateTime.UtcNow - modifiedTime).TotalHours <= 2) // read from local
                 {
-                    if ((DateTime.UtcNow - f.LastWriteTimeUtc).TotalHours <= 2) // read from local
-                    {
-                        string jsonText = "";
-                        try
-                        {
-                            using var fs = new FileStream(s_mapsSavePath, FileMode.OpenOrCreate, FileAccess.Read);
-                            using var sr = new StreamReader(fs, Encoding.UTF8);
-                            jsonText = await sr.ReadToEndAsync().ConfigureAwait(false);
-                        }
-                        catch (Exception) { }
+                    var jsonText = await FileHelper.ReadLocalFileAsync(s_mapsSavePath).ConfigureAwait(false);
 
-                        if (jsonText != "")
-                        {
-                            s_maps = JsonConvert.DeserializeObject<List<BMap>>(jsonText);
-                            s_updateTime = DateTime.UtcNow;
-                            return true;
-                        }
+                    if (jsonText != null && jsonText != "")
+                    {
+                        s_maps = JsonConvert.DeserializeObject<List<BMap>>(jsonText);
+                        s_updateTime = DateTime.UtcNow;
+                        return true;
                     }
                 }
+
                 return false;
             });
 
@@ -167,10 +158,8 @@ namespace BallanceLauncher.Utils
                     }
                 }
                 // save to json
-                using var fs = new FileStream(s_mapsSavePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
-                using var sw = new StreamWriter(fs, Encoding.UTF8);
-                string j = JsonConvert.SerializeObject(s_maps, Formatting.None);
-                await sw.WriteAsync(j).ConfigureAwait(false);
+                var jsonText = JsonConvert.SerializeObject(s_maps, Formatting.None);
+                await FileHelper.WriteLocalFileAsync(s_mapsSavePath, jsonText).ConfigureAwait(false);
 
                 s_updateTime = DateTime.UtcNow;
             });
