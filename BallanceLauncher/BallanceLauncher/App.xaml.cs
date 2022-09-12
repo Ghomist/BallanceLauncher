@@ -26,6 +26,8 @@ using Microsoft.UI;
 using Newtonsoft.Json;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.UI.Core.Preview;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -47,38 +49,48 @@ namespace BallanceLauncher
         private static App _appInstance;
         private static Process _runningInstance;
 
-        private static readonly string s_configSavePath = BaseDir + "config.json";
-        private static readonly string s_instancesSavePath = BaseDir + "instances.json";
-        private static readonly string s_exceptionLogPath = BaseDir + "err.log";
+        private static readonly string s_configSavePath = "config.json";
+        private static readonly string s_instancesSavePath = "instances.json";
+        private static readonly string s_exceptionLogPath = "err.log";
+
+        private static readonly StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
         public App()
         {
             // avoid 're-open'
             //if (ProcessHelper.HasFormerProcess()) Environment.Exit(1);
 
-            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+            //AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+
 
             // extract resources
-            if (!File.Exists(BaseDir + "BallanceModInfoReader.exe"))
-            {
-                _ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BallanceModInfoReader.exe");
-                _ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BML.dll");
-            }
+            //if (!File.Exists(BaseDir + "BallanceModInfoReader.exe"))
+            //{
+            _ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BallanceModInfoReader.exe");
+            _ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BML.dll");
+            //}
 
             // read configuration
             try
             {
-                using var fs = new FileStream(s_configSavePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                var jsonText = new StreamReader(fs, Encoding.UTF8).ReadToEnd();
-                Config = JsonConvert.DeserializeObject<Config>(jsonText);
+                var configFile = localFolder.GetFileAsync(s_configSavePath).GetAwaiter().GetResult();
+                var jsonText = FileIO.ReadTextAsync(configFile).GetAwaiter().GetResult();
+                if (jsonText == null || jsonText == "")
+                {
+                    Config = new();
+                }
+                else
+                {
+                    Config = JsonConvert.DeserializeObject<Config>(jsonText);
+                }
             }
             catch (Exception) { Config = new(); }
 
             // read instances
             try
             {
-                using var fs = new FileStream(s_instancesSavePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                var jsonText = new StreamReader(fs, Encoding.UTF8).ReadToEnd();
+                var instancesFile = localFolder.GetFileAsync(s_instancesSavePath).GetAwaiter().GetResult();
+                var jsonText = FileIO.ReadTextAsync(instancesFile).GetAwaiter().GetResult();
                 Instances = JsonConvert.DeserializeObject<ObservableCollection<BallanceInstance>>(jsonText);
                 for (int i = Instances.Count - 1; i >= 0; --i)
                 {
@@ -88,7 +100,7 @@ namespace BallanceLauncher
                     }
                 }
             }
-            catch (Exception) { Instances = new(); }
+            catch (Exception) { Instances = new() { new BallanceInstance("真正的游戏", @"D:\Ballance\") }; }
 
             // app initialize
             this.InitializeComponent();
@@ -126,52 +138,36 @@ namespace BallanceLauncher
             }
         }
 
-        public static void SaveAll()
-        {
-            // clear all json files
-            foreach (var path in new string[] { s_configSavePath, s_instancesSavePath })
+        public static Task SaveAll() =>
+            Task.Run(async () =>
             {
-                var file = new FileInfo(path);
-                if (file.Exists) file.Delete();
-            }
-            // save configuration
-            using (FileStream fs = new(s_configSavePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
-            {
-                using StreamWriter sw = new(fs, Encoding.UTF8);
-                sw.WriteLine(JsonConvert.SerializeObject(Config, Formatting.Indented));
-            }
-            // save instances
-            using (FileStream fs = new(s_instancesSavePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
-            {
-                using StreamWriter sw = new(fs, Encoding.UTF8);
-                sw.WriteLine(JsonConvert.SerializeObject(Instances, Formatting.Indented));
-            }
-        }
+                // save configuration
+                var configFile = await localFolder.CreateFileAsync(s_configSavePath, CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(configFile, JsonConvert.SerializeObject(Config));
 
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-        {
+                // save instances
+                var instancesFile = await localFolder.CreateFileAsync(s_instancesSavePath, CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(instancesFile, JsonConvert.SerializeObject(Instances));
+            });
+
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) =>
             (Window, Hwnd) = StartWindow();
-        }
 
         private static (MainWindow, IntPtr) StartWindow()
         {
             var window = new MainWindow();
+            //window.Closed += async (sender, e) => { await SaveAll(); };
             window.Activate();
 
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
             return (window, hwnd);
         }
 
-        private void OnUnhandledException(object sender, System.UnhandledExceptionEventArgs e)
-        {
-            var log = new FileInfo(s_exceptionLogPath);
-            if (log.Exists) log.Delete();
-
-            using var fs = new FileStream(s_exceptionLogPath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
-            using StreamWriter sw = new(fs, Encoding.UTF8);
-            sw.WriteLine(nameof(e.ExceptionObject) + "\n");
-            sw.WriteLine(e.ToString());
-        }
+        //private async Task OnUnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        //{
+        //    var errFile = await localFolder.CreateFileAsync(s_exceptionLogPath, CreationCollisionOption.ReplaceExisting);
+        //    await FileIO.WriteTextAsync(errFile, e.ToString());
+        //}
 
     }
 }

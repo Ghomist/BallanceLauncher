@@ -20,6 +20,7 @@ using System.Xml.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.Core.Preview;
 using Windows.UI.WindowManagement;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -160,10 +161,11 @@ namespace BallanceLauncher
 
         private void Window_Closed(object sender, WindowEventArgs args)
         {
-            App.SaveAll();
+            App.SaveAll().GetAwaiter().GetResult();
             //Config.SaveAll();
             // remove temp
             FileHelper.DeleteTemp();
         }
+
     }
 }

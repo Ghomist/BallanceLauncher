@@ -40,17 +40,17 @@ namespace BallanceLauncher.Pages
 
         private void BrowseDir(object sender, RoutedEventArgs e)
         {
-            ProcessHelper.RunProcess("explorer.exe", arg: _instance.Path);
+            ProcessHelper.RunProcess("explorer.exe", args: _instance.Path);
         }
 
         private void BrowseMapDir(object sender, RoutedEventArgs e)
         {
-            ProcessHelper.RunProcess("explorer.exe", arg: _instance.MapDir);
+            ProcessHelper.RunProcess("explorer.exe", args: _instance.MapDir);
         }
 
         private void BrowseModDir(object sender, RoutedEventArgs e)
         {
-            ProcessHelper.RunProcess("explorer.exe", arg: _instance.ModDir);
+            ProcessHelper.RunProcess("explorer.exe", args: _instance.ModDir);
         }
 
         private void NameTextBox_TextChanged(object sender, TextChangedEventArgs e)

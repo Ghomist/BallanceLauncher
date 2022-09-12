@@ -12,10 +12,10 @@ namespace BallanceLauncher.Utils
 {
     class ProcessHelper
     {
-        public static Process RunProcess(string exePath, string baseDir = null, string arg = null, bool showindow = false)
+        public static Process RunProcess(string exePath, string baseDir = null, string args = null, bool showindow = false)
         {
-            baseDir ??= System.AppDomain.CurrentDomain.BaseDirectory;
-            arg ??= "";
+            baseDir ??= App.BaseDir;
+            args ??= "";
 
             Process process = new()
             {
@@ -26,13 +26,32 @@ namespace BallanceLauncher.Utils
                     CreateNoWindow = !showindow,
                     WindowStyle = showindow ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
                     FileName = exePath,
-                    Arguments = arg,
+                    Arguments = args,
                 }
             };
 
-            //startInfo.FileName = "cmd.exe";
-            //var disk = baseDir.Split(':')[0];
-            //startInfo.Arguments = string.Format("/C {0}: & cd {1} & {2}", disk, baseDir, exePath);
+            process.Start();
+
+            return process;
+        }
+
+        public static Process RunProcessCmd(string exePath, string baseDir = null, string args = null)
+        {
+            baseDir ??= App.BaseDir;
+            args ??= "";
+
+            Process process = new()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    RedirectStandardOutput = true,
+                    WorkingDirectory = baseDir,
+                    CreateNoWindow = true,
+                    WindowStyle = ProcessWindowStyle.Hidden,
+                    FileName = "cmd.exe",
+                    Arguments = string.Format("/C \"{0}: & cd \"{1}\" & \"{2}\" {3}\"", baseDir[0], baseDir, exePath, args),
+                }
+            };
 
             process.Start();
 
