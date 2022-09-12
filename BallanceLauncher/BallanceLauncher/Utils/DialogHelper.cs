@@ -6,6 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using Windows.UI.Notifications;
+using Windows.UI.Popups;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace BallanceLauncher.Utils
 {
@@ -60,6 +63,29 @@ namespace BallanceLauncher.Utils
                 s_semaphore.Release();
             }
             return ContentDialogResult.None;
+        }
+
+        public static ContentDialog ShowProcessingDialog(XamlRoot root, string title)
+        {
+            ContentDialog dialog = new()
+            {
+                XamlRoot = root,
+                Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style,
+                Title = title,
+                CloseButtonText = null,
+                Content = new ProgressRing() { IsActive = true }
+            };
+            _ = dialog.ShowAsync(); // don't wait
+            return dialog;
+        }
+
+        public static void FinishProcessingDialog(ContentDialog dialog, string finishInfo)
+        {
+            dialog.DispatcherQueue.TryEnqueue(() =>
+            {
+                dialog.CloseButtonText = "好的";
+                dialog.Content = finishInfo;
+            });
         }
     }
 }
