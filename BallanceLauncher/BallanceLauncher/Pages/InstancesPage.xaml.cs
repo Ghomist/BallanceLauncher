@@ -43,24 +43,38 @@ namespace BallanceLauncher.Pages
             //this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Disabled;
         }
 
+        public void NavigateTo(BallanceInstance instance) => NavigateTo(instance.Name);
         public void NavigateTo(string name)
         {
-            var target = App.Instances.FirstOrDefault(i => i.Name == name);
-            int page = App.Instances.IndexOf(target);
-            ContentFrame.Navigate(typeof(InstanceConfigPage), target, s_slideFromRight);
-            NavView.SelectedItem = NavView.MenuItems[page + 2];
-            _currentPage = page;
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                UpdateInstances();
+                var target = App.Instances.FirstOrDefault(i => i.Name == name);
+                int page = App.Instances.IndexOf(target);
+                ContentFrame.Navigate(typeof(InstanceConfigPage), (target, this), s_slideFromRight);
+                NavView.SelectedItem = NavView.MenuItems[page + 2];
+                _currentPage = page;
+            });
         }
+
+        public void NavigateToOverview() =>
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                UpdateInstances();
+                ContentFrame.Navigate(typeof(InstanceOverviewPage), this, s_slideFromLeft);
+                NavView.SelectedItem = NavView.MenuItems[1];
+                _currentPage = OVERVIEW_PG;
+            });
 
         public void NavigateToLast() =>
             DispatcherQueue.TryEnqueue(() =>
-                {
-                    UpdateInstances();
-                    int last = App.Instances.Count - 1;
-                    ContentFrame.Navigate(typeof(InstanceConfigPage), App.Instances[last], s_slideFromRight);
-                    NavView.SelectedItem = NavView.MenuItems[last + 2];
-                    _currentPage = last;
-                });
+            {
+                UpdateInstances();
+                int last = App.Instances.Count - 1;
+                ContentFrame.Navigate(typeof(InstanceConfigPage), (App.Instances[last], this), s_slideFromRight);
+                NavView.SelectedItem = NavView.MenuItems[last + 2];
+                _currentPage = last;
+            });
 
         public Task<BallanceInstance> AddBallanceAsync(string instancePath, string instanceName) =>
             Task.Run(() =>
@@ -134,7 +148,7 @@ namespace BallanceLauncher.Pages
                 default:
                     int targetPage = int.Parse(tag);
                     if (targetPage == _currentPage) break;
-                    ContentFrame.Navigate(typeof(InstanceConfigPage), App.Instances[targetPage],
+                    ContentFrame.Navigate(typeof(InstanceConfigPage), (App.Instances[targetPage], this),
                         targetPage < _currentPage ? s_slideFromLeft : s_slideFromRight);
                     _currentPage = targetPage; break;
             }

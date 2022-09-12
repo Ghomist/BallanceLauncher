@@ -42,6 +42,7 @@
     <None Remove="Pages\InstanceInstallPage.xaml" />
     <None Remove="Pages\InstanceOverviewPage.xaml" />
     <None Remove="Pages\InstancesPage.xaml" />
+    <None Remove="Pages\InstanceSubpages\ConfigPages\OperationPage.xaml" />
     <None Remove="Pages\InstanceSubpages\ModDetailsPage.xaml" />
     <None Remove="Pages\MapDownloadPage.xaml" />
     <None Remove="Pages\ProcessingPage.xaml" />
@@ -65,6 +66,12 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="WpfCore.FolderPicker" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstanceSubpages\ConfigPages\OperationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

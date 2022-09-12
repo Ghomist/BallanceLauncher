@@ -26,16 +26,27 @@ namespace BallanceLauncher.Pages
     {
         private BallanceInstance _instance;
         private string _currentTag;
+        private InstancesPage _parentPage;
 
         public InstanceConfigPage()
         {
             InitializeComponent();
         }
 
+        public void TryFresh()
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                _currentTag = "Basic";
+                SettingHeader.Text = "基本信息";
+                SettingContent.Navigate(typeof(BasicConfigPage), (_instance));
+            });
+        }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _currentTag = "Basic";
-            _instance = e.Parameter as BallanceInstance;
+            (_instance, _parentPage) = (ValueTuple<BallanceInstance, InstancesPage>)e.Parameter;
             SettingHeader.Text = "基本信息";
             SettingContent.Navigate(typeof(BasicConfigPage), _instance);
             //SettingText.Text = (e.Parameter as BallanceInstance).ToJson();
@@ -67,7 +78,7 @@ namespace BallanceLauncher.Pages
                     break;
                 case "Other":
                     SettingHeader.Text = "其它设置";
-                    SettingContent.Navigate(typeof(TestPage));
+                    SettingContent.Navigate(typeof(OperationPage), (_instance, _parentPage));
                     break;
             }
             _currentTag = tag;

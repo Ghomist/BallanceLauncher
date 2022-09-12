@@ -1,11 +1,12 @@
 ﻿<Page
-    x:Class="BallanceLauncher.Pages.BasicConfigPage"
+    x:Class="BallanceLauncher.Pages.OperationPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BallanceLauncher.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+
     <Page.Resources>
         <Style x:Key="ConfigHeader" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24" />
@@ -35,20 +36,47 @@
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Auto">
             <StackPanel>
+
                 <StackPanel Style="{StaticResource InfoLine}">
-                    <TextBlock Style="{StaticResource InfoKey}" Text="你给我起的名字" />
-                    <TextBox
-                        x:Name="NameTextBox"
-                        Text="{x:Bind _instance.Name}"
-                        TextChanged="NameTextBox_TextChanged" />
+                    <TextBlock Style="{StaticResource InfoKey}" Text="修改实例" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button
+                            Name="InstallBML"
+                            Margin="0,10"
+                            Click="InstallBML_Click"
+                            IsEnabled="{x:Bind BMLNotInstalled}">
+                            <TextBlock Style="{StaticResource Info}" Text="安装 BML" />
+                        </Button>
+                        <Button
+                            Name="UninstallBML"
+                            Margin="10,10"
+                            Click="UninstallBML_Click"
+                            IsEnabled="{x:Bind BMLInstalled}">
+                            <TextBlock Style="{StaticResource Info}" Text="卸载 BML" />
+                        </Button>
+                    </StackPanel>
                 </StackPanel>
+
                 <StackPanel Style="{StaticResource InfoLine}">
-                    <TextBlock Style="{StaticResource InfoKey}" Text="我在哪" />
-                    <Button Click="BrowseDir">
-                        <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.Path}" />
+                    <TextBlock
+                        Foreground="DarkRed"
+                        Style="{StaticResource InfoKey}"
+                        Text="危险操作！" />
+                    <Button
+                        Name="Remove"
+                        Margin="0,10"
+                        Click="Remove_Click">
+                        <TextBlock Style="{StaticResource Info}" Text="移除该游戏" />
+                    </Button>
+                    <Button
+                        Name="Uninstall"
+                        Margin="0,10"
+                        Click="Uninstall_Click">
+                        <TextBlock Style="{StaticResource Info}" Text="卸载游戏" />
                     </Button>
                 </StackPanel>
-                <StackPanel Style="{StaticResource InfoLine}">
+
+                <!--<StackPanel Style="{StaticResource InfoLine}">
                     <TextBlock Style="{StaticResource InfoKey}" Text="BML" />
                     <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.HasBMLInstalled}" />
                 </StackPanel>
@@ -67,7 +95,7 @@
                 <StackPanel Style="{StaticResource InfoLine}">
                     <TextBlock Style="{StaticResource InfoKey}" Text="玩的时候开的哪里" />
                     <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.Executable}" />
-                </StackPanel>
+                </StackPanel>-->
             </StackPanel>
         </ScrollViewer>
     </Grid>

@@ -72,10 +72,7 @@ namespace BallanceLauncher
                 var jsonText = new StreamReader(fs, Encoding.UTF8).ReadToEnd();
                 Config = JsonConvert.DeserializeObject<Config>(jsonText);
             }
-            catch (Exception)
-            {
-                Config = new();
-            }
+            catch (Exception) { Config = new(); }
 
             // read instances
             try
@@ -83,18 +80,15 @@ namespace BallanceLauncher
                 using var fs = new FileStream(s_instancesSavePath, FileMode.Open, FileAccess.Read, FileShare.Read);
                 var jsonText = new StreamReader(fs, Encoding.UTF8).ReadToEnd();
                 Instances = JsonConvert.DeserializeObject<ObservableCollection<BallanceInstance>>(jsonText);
-                //foreach (var instance in Instances)
-                //{
-                //    if (!instance.EnsureExist()) Instances.Remove(instance);
-                //}
-            }
-            catch (Exception)
-            {
-                Instances = new()
+                for (int i = Instances.Count - 1; i >= 0; --i)
                 {
-                    new BallanceInstance("真正的游戏", @"D:\Ballance")
-                };
+                    if (!Instances[i].Exists)
+                    {
+                        Instances.RemoveAt(i);
+                    }
+                }
             }
+            catch (Exception) { Instances = new(); }
 
             // app initialize
             this.InitializeComponent();

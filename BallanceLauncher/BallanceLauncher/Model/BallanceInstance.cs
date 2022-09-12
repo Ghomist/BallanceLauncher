@@ -14,68 +14,50 @@ namespace BallanceLauncher.Model
 {
     public class BallanceInstance
     {
-        public string Name { get; set; }
-
-        public string Path { get; set; }
-        public string WorkingPath { get; set; }
-
-        // paths
-        private string _bmlPath = "";
-        public string BMLDir
+        private string _name;
+        public string Name
         {
-            get => _bmlPath == "" ? "没有找到 BML" : _bmlPath;
-            set => _bmlPath = value ?? throw new ArgumentNullException(nameof(BMLDir));
-        }
-        private string _modDir = "";
-        public string ModDir
-        {
-            get => _modDir == "" ? "没有安装 BML" : _modDir;
-            set => _modDir = value ?? throw new ArgumentNullException(nameof(ModDir));
-        }
-        private string _mapDir = "";
-        public string MapDir
-        {
-            get => _mapDir == "" ? "没有安装 BML" : _mapDir;
-            set => _mapDir = value ?? throw new ArgumentNullException(nameof(MapDir));
-        }
-        public string Executable { get; set; }
-
-        public Visibility ModPropVisibility { get => HasBMLInstalled ? Visibility.Visible : Visibility.Collapsed; }
-        public Visibility MapPropVisibility { get => HasBMLInstalled ? Visibility.Visible : Visibility.Collapsed; }
-
-        //public List<BallanceMod> Mods { get; private set; }
-        //public List<BallanceMap> Maps { get; private set; }
-
-        //public bool IsDefault { get; set; }
-        public bool HasBMLInstalled { get; set; }
-
-        public BallanceInstance() { }
-
-        public BallanceInstance(string name, string path)
-        {
-            Name = name;
-            Path = path;
-            //IsDefault = false;
-            WorkingPath = path + @"\bin";
-            Executable = path + @"\bin\player.exe";
-            BMLDir = path + @"\ModLoader";
-
-            HasBMLInstalled = File.Exists(Path + @"\BuildingBlocks\BML.dll") && Directory.Exists(BMLDir);
-
-            if (HasBMLInstalled)
+            get => _name;
+            set
             {
-                ModDir = BMLDir + @"\Mods";
-                MapDir = BMLDir + @"\Maps";
+                if (value == null || value == "") throw new ArgumentException("Name cannot be empty", nameof(Name));
+                _name = value;
             }
         }
 
-        [OnDeserialized]
-        internal void OnDeserializedMethod(StreamingContext context) =>
-            HasBMLInstalled = File.Exists(Path + @"\BuildingBlocks\BML.dll") && Directory.Exists(BMLDir);
+        private string _path;
+        public string Path
+        {
+            get => _path;
+            set
+            {
+                if (value == null || value == "") throw new ArgumentException("Path cannot be empty", nameof(Path));
+                //if (!Directory.Exists(value)) throw new ArgumentException("Directory dose not exist", nameof(Path));
+                if (value[^1] != '\\') value += '\\';
+                _path = value;
+            }
+        }
 
+        // paths
+        public string WorkingPath => Path + @"bin\";
+        public string Executable => WorkingPath + @"player.exe";
+        public string BMLDir => HasBMLInstalled ? Path + @"ModLoader\" : "没有找到 BML";
+        public string ModDir => HasBMLInstalled ? BMLDir + @"Mods\" : "没有安装 BML";
+        public string MapDir => HasBMLInstalled ? BMLDir + @"Maps\" : "没有安装 BML";
 
-        public bool EnsureExist() => File.Exists(Executable);
+        public bool Exists => Directory.Exists(Path) && File.Exists(Executable);
+        public bool HasBMLInstalled => File.Exists(Path + @"BuildingBlocks\BML.dll") && Directory.Exists(Path + @"ModLoader\");
 
+        public Visibility ModPropVisibility => HasBMLInstalled ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility MapPropVisibility => HasBMLInstalled ? Visibility.Visible : Visibility.Collapsed;
+
+        //public bool IsDefault { get; set; }
+
+        public BallanceInstance() { }
+        public BallanceInstance(string name, string path) => (Name, Path) = (name, path);
+
+        //[OnDeserialized]
+        //internal void OnDeserializedMethod(StreamingContext context) { }
 
         public Task<List<BallanceMod>> GetModsAsync()
         {
@@ -94,23 +76,23 @@ namespace BallanceLauncher.Model
                     switch (file.Extension.ToLower())
                     {
                         case ".bmod":
-                            name = file.Name[..(file.Name.Length - 5)];
+                            name = file.Name[..^5];
                             mods.Add(new BallanceMod(file.FullName, name, BallanceModType.BMod, true));
                             break;
                         case ".zip":
-                            name = file.Name[..(file.Name.Length - 4)];
+                            name = file.Name[..^4];
                             mods.Add(new BallanceMod(file.FullName, name, BallanceModType.Zip, true));
                             break;
                         case ".disable":
-                            name = file.Name[..(file.Name.Length - 8)]; // remove '.disable'
+                            name = file.Name[..^8]; // remove '.disable'
                             if (name.EndsWith(".bmod"))
                             {
-                                name = name[..(name.Length - 5)];
+                                name = name[..^5];
                                 mods.Add(new BallanceMod(file.FullName, name, BallanceModType.BMod, false));
                             }
                             else if (name.EndsWith(".zip"))
                             {
-                                name = name[..(name.Length - 4)];
+                                name = name[..^4];
                                 mods.Add(new BallanceMod(file.FullName, name, BallanceModType.Zip, false));
                             }
                             break;
@@ -120,20 +102,19 @@ namespace BallanceLauncher.Model
                 foreach (var folder in modDir.GetDirectories())
                 {
                     string name = folder.Name;
-                    FileInfo modFile = folder.GetFiles().FirstOrDefault(f => f.Name.ToLower().EndsWith(".bmod"));
+                    FileInfo modFile = folder.GetFiles().FirstOrDefault(f => f.Name.EndsWith(".bmod", StringComparison.OrdinalIgnoreCase));
                     if (modFile != null)
                     {
                         mods.Add(new BallanceMod(modFile.FullName, name, BallanceModType.Folder, true));
                         continue;
                     }
                     // try to find disable mod
-                    modFile = folder.GetFiles().FirstOrDefault(f => f.Name.ToLower().EndsWith(".bmod.disable"));
+                    modFile = folder.GetFiles().FirstOrDefault(f => f.Name.EndsWith(".bmod.disable", StringComparison.OrdinalIgnoreCase));
                     if (modFile != null)
                         mods.Add(new BallanceMod(modFile.FullName, name, BallanceModType.Folder, false));
                 }
 
                 return mods;
-
             });
         }
 
@@ -150,26 +131,36 @@ namespace BallanceLauncher.Model
                 foreach (var file in mapDir.GetFiles())
                 {
                     if (!file.Name.Contains('.')) continue;
-                    if (file.Extension.ToLower() == ".nmo")
+                    var extensionType = file.Extension.ToLower();
+
+                    if (extensionType == ".nmo")
                     {
-                        maps.Add(new BallanceMap(file.FullName, file.Name[..(file.Name.Length - 4)], BallanceMapType.NMO));
+                        maps.Add(new BallanceMap(file.FullName, file.Name[..^4], BallanceMapType.NMO));
                     }
-                    else if (file.Extension.ToLower() == ".cmo")
+                    else if (extensionType == ".cmo")
                     {
-                        maps.Add(new BallanceMap(file.FullName, file.Name[..(file.Name.Length - 4)], BallanceMapType.CMO));
+                        maps.Add(new BallanceMap(file.FullName, file.Name[..^4], BallanceMapType.CMO));
                     }
                 }
                 return maps;
             });
         }
 
-        public Task InstallBMLAsync() => FileHelper.ExtractBMLAsync(this);
+        public async Task InstallBMLAsync() => await FileHelper.ExtractBMLAsync(this);
+
+        public void UninstallBML(bool force = false)
+        {
+            if (!force && !HasBMLInstalled) return;
+            var dll = Path + @"BuildingBlocks\BML.dll";
+            if (File.Exists(dll)) File.Delete(dll);
+            if (Directory.Exists(BMLDir)) Directory.Delete(BMLDir, true);
+        }
 
         public void Delete()
         {
             try
             {
-                Directory.Delete(MapDir, true);
+                Directory.Delete(Path, recursive: true);
             }
             catch (DirectoryNotFoundException)
             {
