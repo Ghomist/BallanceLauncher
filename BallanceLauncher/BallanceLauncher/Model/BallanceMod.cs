@@ -59,7 +59,7 @@ namespace BallanceLauncher.Model
             try
             {
                 // read mod info
-                var readerProcess = ProcessHelper.RunProcess(s_modInfoReaderPath, arg: modPath);
+                var readerProcess = ProcessHelper.RunProcess(s_modInfoReaderPath, args: modPath);
 
                 var stdout = await readerProcess.StandardOutput.ReadToEndAsync().ConfigureAwait(false);
 
