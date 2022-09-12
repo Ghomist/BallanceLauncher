@@ -15,10 +15,10 @@ namespace BallanceLauncher.Utils
 {
     public class FileHelper
     {
-        public static readonly string TempDir = App.BaseDir + @"temp\";
+        public static StorageFolder LocalFolder => ApplicationData.Current.LocalFolder;
+        public static StorageFolder TemporaryFolder => ApplicationData.Current.TemporaryFolder;
 
         private static readonly SHA256 s_sha256Encrypter = SHA256.Create();
-        private static bool s_init = false;
 
         public static Task ExtractBallance(string pathName) =>
             Task.Run(async () =>
@@ -49,26 +49,16 @@ namespace BallanceLauncher.Utils
                 zipFile.Delete();
             });
 
-        public static Task<(string, string)> ExtractModAsync(string fullName, string displayName) =>
-            Task.Run(() =>
+        public static Task<string> ExtractModAsync(string fullName, string displayName) =>
+            Task.Run(async () =>
             {
-                if (!s_init)
-                {
-                    DeleteTemp();
-                    CreateTemp();
-                    s_init = true;
-                }
-
-                var tempPath = TempDir + displayName;
-                // ensure target dir exist
-                var tempDir = new DirectoryInfo(tempPath);
-                if (tempDir.Exists) tempDir.Delete(true);
-                tempDir.Create();
+                var folder = await TemporaryFolder.CreateFolderAsync(displayName, CreationCollisionOption.ReplaceExisting);
                 // extract
-                ZipFile.ExtractToDirectory(fullName, tempPath, true);
+                ZipFile.ExtractToDirectory(fullName, folder.Path, true);
                 // find bmod
-                var mod = tempDir.GetFiles().FirstOrDefault(file => file.Extension.ToLower() == ".bmod");
-                return (tempPath, mod.FullName);
+                var files = await folder.GetFilesAsync();
+                var mod = files.FirstOrDefault(file => file.FileType.ToLower() == ".bmod");
+                return mod.Path;
             });
 
         public static Task ExtractResourceAsync(string resourcePath, string resourceName, string fullName = null) =>
@@ -87,7 +77,7 @@ namespace BallanceLauncher.Utils
         {
             return Task.Run(async () =>
             {
-                var f = await App.LocalFolder.GetFileAsync(fileName);
+                var f = await LocalFolder.GetFileAsync(fileName);
                 return await FileIO.ReadTextAsync(f);
             });
         }
@@ -98,7 +88,7 @@ namespace BallanceLauncher.Utils
             {
                 try
                 {
-                    var f = await App.LocalFolder.GetFileAsync(fileName);
+                    var f = await LocalFolder.GetFileAsync(fileName);
                     return File.GetLastWriteTimeUtc(f.Path);
                 }
                 catch (FileNotFoundException)
@@ -112,31 +102,9 @@ namespace BallanceLauncher.Utils
         {
             return Task.Run(async () =>
             {
-                var configFile = await App.LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                var configFile = await LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
                 await FileIO.WriteTextAsync(configFile, content);
             });
-        }
-
-        public static void DeleteModTemp(string extractedPath)
-        {
-            DirectoryInfo dir = new(extractedPath);
-            if (dir.Exists) dir.Delete(true);
-        }
-
-        public static void DeleteTemp()
-        {
-            DirectoryInfo dir = new(TempDir);
-            try
-            {
-                if (dir.Exists) dir.Delete(true);
-            }
-            catch (Exception) { }
-        }
-
-        public static void CreateTemp()
-        {
-            DirectoryInfo dir = new(TempDir);
-            if (!dir.Exists) dir.Create();
         }
 
         public static string GetRealHash(string fullName)

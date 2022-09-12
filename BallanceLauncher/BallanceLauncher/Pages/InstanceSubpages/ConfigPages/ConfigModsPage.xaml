@@ -40,8 +40,6 @@
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="auto" />
                         <!--<ColumnDefinition Width="10" />-->
@@ -56,27 +54,28 @@
                         Grid.Column="2"
                         Margin="10,5,0,0"
                         Text="{x:Bind DisplayName}" />
-                    <TextBlock
-                        Grid.Column="3"
-                        Margin="15,5,0,0"
-                        Foreground="Gray"
-                        Text="{x:Bind Details.Mod.Name, Mode=TwoWay}" />
-                    <TextBlock
-                        Grid.Column="4"
-                        Margin="3,5,4,0"
-                        Foreground="Gray"
-                        Text="-" />
-                    <TextBlock
-                        Grid.Column="5"
-                        Margin="0,5,20,0"
-                        Foreground="Gray"
-                        Text="{x:Bind Details.Mod.Author, Mode=TwoWay}" />
+
+                    <StackPanel Grid.Column="3">
+                        <TextBlock
+                            Margin="15,5,0,0"
+                            Foreground="Gray"
+                            Text="{x:Bind Details.Mod.Name, Mode=TwoWay}" />
+                        <TextBlock
+                            Margin="3,5,4,0"
+                            Foreground="Gray"
+                            Text="-" />
+                        <TextBlock
+                            Margin="0,5,20,0"
+                            Foreground="Gray"
+                            Text="{x:Bind Details.Mod.Author, Mode=TwoWay}" />
+                    </StackPanel>
+
                     <StackPanel
                         Name="PlaceHolder"
-                        Grid.Column="6"
+                        Grid.Column="4"
                         Height="1" />
                     <TextBlock
-                        Grid.Column="7"
+                        Grid.Column="5"
                         Margin="0,5,5,0"
                         Text="{x:Bind GetTypeString()}"
                         ToolTipService.ToolTip="{x:Bind GetTypeTip()}" />

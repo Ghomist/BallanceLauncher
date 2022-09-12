@@ -9,7 +9,7 @@
   <Identity
     Name="15f9b972-6c99-4eee-a877-32b049ddf815"
     Publisher="CN=ghomist"
-    Version="0.1.4.0" />
+    Version="0.2.0.0" />
 
   <Properties>
     <DisplayName>BallanceLauncher</DisplayName>

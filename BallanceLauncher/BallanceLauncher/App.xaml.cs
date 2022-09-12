@@ -39,21 +39,20 @@ namespace BallanceLauncher
     /// </summary>
     public partial class App : Application
     {
+        public static ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
+
         public static ObservableCollection<BallanceInstance> Instances { get; private set; }
         public static MainWindow Window { get; private set; }
         public static IntPtr Hwnd { get; private set; }
         public static Config Config { get; private set; }
 
         public static string BaseDir => AppDomain.CurrentDomain.BaseDirectory;
-        public static StorageFolder LocalFolder => ApplicationData.Current.LocalFolder;
-        public static ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
 
         private static App _appInstance;
         private static Process _runningInstance;
 
         private static readonly string s_configSavePath = "config.json";
         private static readonly string s_instancesSavePath = "instances.json";
-        private static readonly string s_exceptionLogPath = "err.log";
 
         public App()
         {

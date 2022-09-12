@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using Windows.Storage;
 using Windows.UI;
 
 namespace BallanceLauncher.Utils
@@ -169,26 +170,26 @@ namespace BallanceLauncher.Utils
             {
                 //await App.Window.TellDownloadBeginAsync();
 
-                FileHelper.CreateTemp();
-
-                var temp = FileHelper.TempDir + mapName + ".temp";
-                var tempFile = new FileInfo(temp);
-                if (tempFile.Exists) tempFile.Delete();
                 try
                 {
-                    using var fs = new FileStream(temp, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
+                    var temp = await FileHelper.TemporaryFolder.CreateFileAsync(mapName, Windows.Storage.CreationCollisionOption.ReplaceExisting);
+                    var fs = await temp.OpenStreamForWriteAsync().ConfigureAwait(false);
+                    // download
                     using var stream = await s_client.GetStreamAsync(url).ConfigureAwait(false);
                     await stream.CopyToAsync(fs).ConfigureAwait(false);
 
-                    tempFile.Refresh();
-                    if (tempFile.Exists)
+                    if (temp.IsAvailable) // IDK why i put this line here!!!
                     {
                         foreach (var instance in instances)
                         {
                             if (instance.HasBMLInstalled)
-                                tempFile.CopyTo(instance.MapDir + "\\" + mapName + ".nmo");
+                            {
+                                var f = new FileInfo(instance.MapDir + mapName + ".nmo");
+                                if (!f.Exists) f.Create();
+                                var target = await StorageFile.GetFileFromPathAsync(f.FullName);
+                                await temp.CopyAndReplaceAsync(target);
+                            }
                         }
-                        tempFile.Delete();
                     }
                     return true;
                 }
@@ -200,7 +201,6 @@ namespace BallanceLauncher.Utils
                 }
                 finally
                 {
-                    if (tempFile.Exists) tempFile.Delete();
                     //await App.Window.TellDownloadFinishAsync();
                 }
             });
