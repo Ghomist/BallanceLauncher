@@ -121,7 +121,9 @@ namespace BallanceLauncher.Pages
                 "下载到所有", "下载到游戏…", "好的", ContentDialogButton.Primary);
             if (result == ContentDialogResult.Primary)
             {
-                await MapDownloader.DownloadMap(_selectedMap.Url, _selectedMap.Name, App.Instances.ToList()).ConfigureAwait(false);
+                var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "下载地图");
+                await MapDownloader.DownloadMap(_selectedMap.Url, _selectedMap.Name, App.Instances.ToList());
+                DialogHelper.FinishProcessingDialog(dlg, "下载好啦！");
             }
             else if (result == ContentDialogResult.Secondary)
             {
