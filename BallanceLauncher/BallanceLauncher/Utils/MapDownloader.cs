@@ -87,7 +87,7 @@ namespace BallanceLauncher.Utils
                 return s_maps;
             }
 
-            if (s_maps == null || (DateTime.UtcNow - s_updateTime).TotalHours > 2)
+            if (s_maps == null || (DateTime.UtcNow - s_updateTime).TotalHours > ConfigHelper.ForceFetchInterval)
             {
                 var success = await TryFetchMapsLocalAsync().ConfigureAwait(false);
                 if (!success)
@@ -102,7 +102,7 @@ namespace BallanceLauncher.Utils
             Task.Run(async () =>
             {
                 DateTime modifiedTime = await FileHelper.GetConfigModifiedTimeAsync(s_mapsSavePath).ConfigureAwait(false);
-                if ((DateTime.UtcNow - modifiedTime).TotalHours <= 2) // read from local
+                if ((DateTime.UtcNow - modifiedTime).TotalHours <= ConfigHelper.ForceFetchInterval) // read from local
                 {
                     var jsonText = await FileHelper.ReadLocalFileAsync(s_mapsSavePath).ConfigureAwait(false);
 
@@ -219,8 +219,8 @@ namespace BallanceLauncher.Utils
 
     public class BMap
     {
-        private static readonly Color s_light = Color.FromArgb(10, 200, 200, 200);
-        private static readonly Color s_dark = Color.FromArgb(10, 128, 128, 128);
+        //private static readonly Color s_light = Color.FromArgb(10, 200, 200, 200);
+        //private static readonly Color s_dark = Color.FromArgb(10, 128, 128, 128);
 
         public int Index { get; set; }
         public string Category { get; set; }

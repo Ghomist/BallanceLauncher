@@ -33,7 +33,7 @@ namespace BallanceLauncher.Pages
         public HomePage()
         {
             this.InitializeComponent();
-            string defaultInstanceName = (string)App.LocalSettings.Values["defaultBallance"];
+            string defaultInstanceName = ConfigHelper.DefaultInstance;
             var instance = App.Instances.FirstOrDefault(i => i.Name == defaultInstanceName);
             InstanceName.Text = instance != null ? instance.Name : "";
         }
@@ -58,7 +58,7 @@ namespace BallanceLauncher.Pages
         {
             var text = (sender as MenuFlyoutItem).Text;
             InstanceName.Text = text;
-            App.LocalSettings.Values["defaultBallance"] = text;
+            ConfigHelper.DefaultInstance = text;
         }
 
         private void UpdateInstanceList()

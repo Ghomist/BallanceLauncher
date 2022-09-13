@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BallanceLauncher"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utils="using:BallanceLauncher.Utils"
     Closed="Window_Closed"
     mc:Ignorable="d">
 
@@ -42,13 +43,6 @@
                 </StackPanel>
             </Grid>
 
-            <ProgressBar
-                x:Name="Downloading"
-                Grid.Row="1"
-                Height="1"
-                IsIndeterminate="True"
-                Visibility="Collapsed" />
-
             <NavigationView
                 x:Name="NavView"
                 Grid.Row="2"
@@ -62,7 +56,7 @@
                     <AcrylicBrush
                         x:Name="BackgroundAcrylic"
                         FallbackColor="Transparent"
-                        Opacity="{x:Bind local:App.Config.AcrylicOpacity}"
+                        Opacity="{x:Bind utils:ConfigHelper.AcrylicOpacity, Mode=TwoWay}"
                         TintLuminosityOpacity="0"
                         TintOpacity="0" />
                 </NavigationView.Background>

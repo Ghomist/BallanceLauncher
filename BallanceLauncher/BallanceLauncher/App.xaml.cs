@@ -39,12 +39,9 @@ namespace BallanceLauncher
     /// </summary>
     public partial class App : Application
     {
-        public static ApplicationDataContainer LocalSettings => ApplicationData.Current.LocalSettings;
-
         public static ObservableCollection<BallanceInstance> Instances { get; private set; }
         public static MainWindow Window { get; private set; }
         public static IntPtr Hwnd { get; private set; }
-        public static Config Config { get; private set; }
 
         public static string BaseDir => AppDomain.CurrentDomain.BaseDirectory;
         public static string InfoReaderPath => FileHelper.LocalFolder.Path + "\\BallanceModInfoReader.exe";
@@ -52,7 +49,6 @@ namespace BallanceLauncher
         private static App _appInstance;
         private static Process _runningInstance;
 
-        private static readonly string s_configSavePath = "config.json";
         private static readonly string s_instancesSavePath = "instances.json";
 
         public App()
@@ -69,21 +65,6 @@ namespace BallanceLauncher
             _ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BallanceModInfoReader.exe");
             _ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BML.dll");
             //}
-
-            // read configuration
-            try
-            {
-                var jsonText = FileHelper.ReadLocalFileAsync(s_configSavePath).GetAwaiter().GetResult();
-                if (jsonText == null || jsonText == "")
-                {
-                    Config = new();
-                }
-                else
-                {
-                    Config = JsonConvert.DeserializeObject<Config>(jsonText);
-                }
-            }
-            catch (Exception) { Config = new(); }
 
             // read instances
             try
@@ -136,12 +117,8 @@ namespace BallanceLauncher
             }
         }
 
-        public static Task SaveConfigAsync() =>
-            Task.Run(async () =>
-            {
-                await FileHelper.WriteLocalFileAsync(s_configSavePath, JsonConvert.SerializeObject(Config)).ConfigureAwait(false);
-                await FileHelper.WriteLocalFileAsync(s_instancesSavePath, JsonConvert.SerializeObject(Instances));
-            });
+        public static Task SaveInstancesAsync() =>
+            FileHelper.WriteLocalFileAsync(s_instancesSavePath, JsonConvert.SerializeObject(Instances));
 
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) =>
             (Window, Hwnd) = StartWindow();
