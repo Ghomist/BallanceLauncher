@@ -93,6 +93,7 @@ namespace BallanceLauncher.Utils
                 if (!success)
                     await TryFetchMapsOnlineAsync().ConfigureAwait(false);
             }
+
             MapListFreshing = false;
             return s_maps;
         }
@@ -172,11 +173,15 @@ namespace BallanceLauncher.Utils
 
                 try
                 {
+                    // prepare temp file
                     var temp = await FileHelper.TemporaryFolder.CreateFileAsync(mapName, CreationCollisionOption.ReplaceExisting);
-                    using var fs = await temp.OpenStreamForWriteAsync().ConfigureAwait(false);
+                    using var tempStream = await temp.OpenStreamForWriteAsync().ConfigureAwait(false);
                     // download
-                    using var stream = await s_client.GetStreamAsync(url).ConfigureAwait(false);
-                    await stream.CopyToAsync(fs).ConfigureAwait(false);
+                    using var download = await s_client.GetStreamAsync(url).ConfigureAwait(false);
+                    await download.CopyToAsync(tempStream).ConfigureAwait(false);
+                    // finish downloading to temp
+                    tempStream.Close();
+                    download.Close();
 
                     if (temp.IsAvailable) // IDK why i put this line here!!!
                     {
