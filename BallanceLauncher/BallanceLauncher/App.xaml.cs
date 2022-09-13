@@ -47,6 +47,7 @@ namespace BallanceLauncher
         public static Config Config { get; private set; }
 
         public static string BaseDir => AppDomain.CurrentDomain.BaseDirectory;
+        public static string InfoReaderPath => FileHelper.LocalFolder.Path + "\\BallanceModInfoReader.exe";
 
         private static App _appInstance;
         private static Process _runningInstance;
@@ -97,7 +98,7 @@ namespace BallanceLauncher
                     }
                 }
             }
-            catch (Exception) { Instances = new() { new BallanceInstance("真正的游戏", @"D:\Ballance\") }; }
+            catch (Exception) { Instances = new(); }
 
             // app initialize
             this.InitializeComponent();

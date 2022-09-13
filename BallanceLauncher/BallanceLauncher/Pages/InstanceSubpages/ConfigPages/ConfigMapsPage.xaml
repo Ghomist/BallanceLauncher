@@ -73,13 +73,17 @@
             HorizontalAlignment="Left"
             DefaultLabelPosition="Right"
             OverflowButtonVisibility="Collapsed">
-            <AppBarButton Icon="Refresh" Label="刷新" />
+            <AppBarButton
+                Click="Fresh_Click"
+                Icon="Refresh"
+                Label="刷新" />
             <AppBarButton Icon="Add" Label="添加" />
             <!--<AppBarButton Icon="Rename" Label="重命名" />-->
             <AppBarButton
                 x:Name="Delete"
                 Click="Delete_Click"
                 Icon="Delete"
+                IsEnabled="False"
                 Label="删除" />
         </CommandBar>
     </Grid>

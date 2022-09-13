@@ -1,4 +1,5 @@
 ﻿using BallanceLauncher.Model;
+using BallanceLauncher.Utils;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -44,13 +45,17 @@ namespace BallanceLauncher.Pages
             base.OnNavigatedTo(e);
         }
 
-        private void Delete_Click(object sender, RoutedEventArgs e)
+        private async void Delete_Click(object sender, RoutedEventArgs e)
         {
-            foreach (var map in _selectedItems)
+            var result = await DialogHelper.ShowConfirmAsync(XamlRoot, "确认一下", "它们马上就要永远消失了哦 T^T\n（ 无法还原！）", close: true);
+            if (result == ContentDialogResult.Primary)
             {
-                map.Delete();
+                foreach (var map in _selectedItems)
+                {
+                    map.Delete();
+                }
+                FreshMapList();
             }
-            FreshMapList();
         }
 
         private void ModList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -67,6 +72,11 @@ namespace BallanceLauncher.Pages
         {
             _maps = await _instance.GetMapsAsync();
             MapList.ItemsSource = _maps;
+        }
+
+        private void Fresh_Click(object sender, RoutedEventArgs e)
+        {
+            FreshMapList();
         }
     }
 }

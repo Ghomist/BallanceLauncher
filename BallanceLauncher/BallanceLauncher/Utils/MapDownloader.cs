@@ -172,28 +172,26 @@ namespace BallanceLauncher.Utils
 
                 try
                 {
-                    var temp = await FileHelper.TemporaryFolder.CreateFileAsync(mapName, Windows.Storage.CreationCollisionOption.ReplaceExisting);
-                    var fs = await temp.OpenStreamForWriteAsync().ConfigureAwait(false);
+                    var temp = await FileHelper.TemporaryFolder.CreateFileAsync(mapName, CreationCollisionOption.ReplaceExisting);
+                    using var fs = await temp.OpenStreamForWriteAsync().ConfigureAwait(false);
                     // download
                     using var stream = await s_client.GetStreamAsync(url).ConfigureAwait(false);
                     await stream.CopyToAsync(fs).ConfigureAwait(false);
 
                     if (temp.IsAvailable) // IDK why i put this line here!!!
                     {
+                        var f = new FileInfo(temp.Path);
                         foreach (var instance in instances)
                         {
                             if (instance.HasBMLInstalled)
                             {
-                                var f = new FileInfo(instance.MapDir + mapName + ".nmo");
-                                if (!f.Exists) f.Create();
-                                var target = await StorageFile.GetFileFromPathAsync(f.FullName);
-                                await temp.CopyAndReplaceAsync(target);
+                                f.CopyTo(instance.MapDir + mapName + ".nmo", true);
                             }
                         }
                     }
                     return true;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     //DialogHelper.ShowErrorMessageAsync(App.Window.Content.XamlRoot,
                     //    "哇啊我不知道怎么就下载失败了！要不你自己试一试呢？");

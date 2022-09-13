@@ -25,12 +25,30 @@ namespace BallanceLauncher.Model
         public bool IsSelected { get; set; } // selected in mod list
 
         public string Hash { get; private set; }
+
+        public Symbol DisplaySymbol =>
+            Type switch
+            {
+                BallanceModType.Zip or BallanceModType.BMod => Symbol.Setting,
+                BallanceModType.Folder => Symbol.Repair,
+                _ => Symbol.Help,
+            };
+
+        public ToolTip TypeTip =>
+            new()
+            {
+                Content = Type switch
+                {
+                    BallanceModType.Zip => "这是一个打包的 Mod 文件\n包含 Mod 文件与其它资源",
+                    BallanceModType.BMod => "这是一个 Ballance Mod 独立文件",
+                    BallanceModType.Folder => "这是一个 Ballance Mod 文件夹",
+                    _ => "我也不知道这是什么类型"
+                }
+            };
+
         public BallanceModInfo Details { get; private set; }
 
-        private static readonly string s_modInfoReaderPath = App.BaseDir + @"BallanceModInfoReader.exe";
-
         public BallanceMod() { }
-
         public BallanceMod(string fullName, string displayName, BallanceModType type, bool enable)
         {
             DisplayName = displayName;
@@ -49,17 +67,16 @@ namespace BallanceLauncher.Model
             var realHash = await FileHelper.GetRealHashAsync(FullName).ConfigureAwait(false);
             if (realHash == Hash) return;
             Hash = realHash;
-            string tempPath = null;
             string modPath = FullName;
 
             if (Type == BallanceModType.Zip)
                 // extract zip file
-                (tempPath, modPath) = await FileHelper.ExtractModAsync(FullName, DisplayName).ConfigureAwait(false);
+                modPath = await FileHelper.ExtractModAsync(FullName, DisplayName).ConfigureAwait(false);
 
             try
             {
                 // read mod info
-                var readerProcess = ProcessHelper.RunProcess(s_modInfoReaderPath, args: modPath);
+                var readerProcess = ProcessHelper.RunProcess(App.InfoReaderPath, args: modPath);
 
                 var stdout = await readerProcess.StandardOutput.ReadToEndAsync().ConfigureAwait(false);
 
@@ -84,8 +101,6 @@ namespace BallanceLauncher.Model
                     Mod = null
                 };
             }
-
-            if (tempPath != null) FileHelper.DeleteModTemp(tempPath);
         }
 
         public string GetTypeString() =>
@@ -116,27 +131,6 @@ namespace BallanceLauncher.Model
 
             Enable = enable;
         }
-
-        public Symbol GetSymbol() =>
-            Type switch
-            {
-                BallanceModType.Zip or BallanceModType.BMod => Symbol.Setting,
-                BallanceModType.Folder => Symbol.Repair,
-                _ => Symbol.Help,
-            };
-
-
-        public ToolTip GetTypeTip() =>
-            new()
-            {
-                Content = Type switch
-                {
-                    BallanceModType.Zip => "这是一个打包的 Mod 文件\n包含 Mod 文件与其它资源",
-                    BallanceModType.BMod => "这是一个 Ballance Mod 独立文件",
-                    BallanceModType.Folder => "这是一个 Ballance Mod 文件夹",
-                    _ => "我也不知道这是什么类型"
-                }
-            };
 
         public void Delete()
         {

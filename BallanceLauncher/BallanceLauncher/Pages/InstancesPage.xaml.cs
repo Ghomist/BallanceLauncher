@@ -80,6 +80,7 @@ namespace BallanceLauncher.Pages
             Task.Run(() =>
             {
                 string path = instancePath;
+                if (path[^1] != '\\') path += '\\';
                 string name = instanceName == "" ? "Ballance" : instanceName;
                 if (!BallanceInstance.EnsureBallancePath(path))
                 {

@@ -78,13 +78,14 @@ namespace BallanceLauncher.Pages
         private async void Delete_Click(object sender, RoutedEventArgs e)
         {
             var result = await DialogHelper.ShowConfirmAsync(XamlRoot, "确认一下", "它们马上就要永远消失了哦 T^T\n（ 无法还原！）", close: true);
-            if (result != ContentDialogResult.Primary) return;
+            if (result == ContentDialogResult.Primary)
+            {
+                foreach (var mod in _selectedItems)
+                    mod.Delete();
 
-            foreach (var mod in _selectedItems)
-                mod.Delete();
-
-            _selectedItems.Clear();
-            FreshModList();
+                _selectedItems.Clear();
+                FreshModList();
+            }
         }
 
         private async void FreshModList()
@@ -105,7 +106,7 @@ namespace BallanceLauncher.Pages
         {
             if (_selectedItems.Count != 1) return;
             var mod = _selectedItems[0];
-            var page = new ModDetailsPage(mod) { MaxHeight = 350 };
+            var page = new ModDetailsPage(mod) { MaxHeight = 350, MaxWidth = 300 };
             await DialogHelper.ShowDialogAsync(XamlRoot, title: "Mod 详情", content: page, close: "好的");
         }
 

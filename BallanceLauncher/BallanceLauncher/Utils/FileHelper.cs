@@ -64,13 +64,21 @@ namespace BallanceLauncher.Utils
         public static Task ExtractResourceAsync(string resourcePath, string resourceName, string fullName = null) =>
             Task.Run(async () =>
             {
-                fullName ??= App.BaseDir + resourceName;
                 var resource = "BallanceLauncher." + resourcePath + "." + resourceName;
                 var assembly = Assembly.GetExecutingAssembly();
-
                 using var input = new BufferedStream(assembly.GetManifestResourceStream(resource));
-                using var output = new FileStream(fullName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
-                await input.CopyToAsync(output).ConfigureAwait(false);
+
+                if (fullName == null)
+                {
+                    var f = await LocalFolder.CreateFileAsync(resourceName);
+                    using var target = await f.OpenStreamForWriteAsync();
+                    await input.CopyToAsync(target);
+                }
+                else
+                {
+                    using var output = new FileStream(fullName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+                    await input.CopyToAsync(output).ConfigureAwait(false);
+                }
             });
 
         public static Task<string> ReadLocalFileAsync(string fileName)
