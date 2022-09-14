@@ -128,5 +128,8 @@ namespace BallanceLauncher.Utils
             var hashBytes = await s_sha256Encrypter.ComputeHashAsync(fs).ConfigureAwait(false);
             return BitConverter.ToString(hashBytes).Replace("-", "");
         }
+
+        public static Task DeleteTemporaryFilesAsync() =>
+            Task.Run(async () => await TemporaryFolder.DeleteAsync(StorageDeleteOption.PermanentDelete));
     }
 }

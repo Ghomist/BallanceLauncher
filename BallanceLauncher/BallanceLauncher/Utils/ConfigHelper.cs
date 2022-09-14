@@ -31,12 +31,41 @@ namespace BallanceLauncher.Utils
             set => s_localSettings.Values[nameof(AcrylicOpacity)] = value;
         }
 
-        // do not shown in the settings page
+        // do not show in the settings page
 
         public static string DefaultInstance
         {
             get => s_localSettings.Values[nameof(DefaultInstance)] as string;
             set => s_localSettings.Values[nameof(DefaultInstance)] = value;
+        }
+
+        public static int WindowHeight
+        {
+            get => (int)(s_localSettings.Values[nameof(WindowHeight)] ?? 720);
+            set => s_localSettings.Values[nameof(WindowHeight)] = value;
+        }
+
+        public static int WindowWidth
+        {
+            get => (int)(s_localSettings.Values[nameof(WindowWidth)] ?? 1280);
+            set => s_localSettings.Values[nameof(WindowWidth)] = value;
+        }
+
+        // clear all configurations
+
+        private static readonly string[] s_clearPropList = new string[]
+        {
+            nameof(ForceFetchInterval),
+            nameof(ShowSystemTitleBar),
+            nameof(AcrylicOpacity),
+        };
+
+        public static void ClearConfig()
+        {
+            foreach (var prop in s_clearPropList)
+            {
+                s_localSettings.Values.Remove(prop);
+            }
         }
     }
 }

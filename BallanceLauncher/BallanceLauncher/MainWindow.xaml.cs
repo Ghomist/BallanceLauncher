@@ -33,20 +33,18 @@ namespace BallanceLauncher
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        private readonly object _lock = new();
         private string _currentPageTag;
 
         public MainWindow()
         {
-            //Type type = MethodBase.GetCurrentMethod().DeclaringType;
-            //string _namespace = type.Namespace;
-            //Assembly _assembly = Assembly.GetExecutingAssembly();
-            //string resourceName = _namespace + ".rcs.background.png";
-            //Stream stream = _assembly.GetManifestResourceStream(resourceName);
-            //Image myImage = new Image();
-
             this.InitializeComponent();
             UpdateTitleBar(ConfigHelper.ShowSystemTitleBar);
+
+            //Bounds.Intersect(new Rect(Bounds.Top, Bounds.Left, 150.0, 150.0));
+            //Bounds.Intersect(new Rect(0.0, 0.0, 150.0, 150.0));
+
+            //WindowId windowId = Win32Interop.GetWindowIdFromWindow(App.Hwnd);
+            //AppWindow appWindow =;
         }
 
         public void NavigateTo(string pageName)
@@ -54,7 +52,7 @@ namespace BallanceLauncher
             switch (pageName)
             {
                 case "Home":
-                    ContentFrame.Navigate(typeof(Pages.HomePage), this); NavView.SelectedItem = NavView.MenuItems[0]; break;
+                    ContentFrame.Navigate(typeof(Pages.HomePage)); NavView.SelectedItem = NavView.MenuItems[0]; break;
                 case "Instances":
                     ContentFrame.Navigate(typeof(Pages.InstancesPage)); NavView.SelectedItem = NavView.MenuItems[1]; break;
                 default:
@@ -135,5 +133,13 @@ namespace BallanceLauncher
             App.SaveInstancesAsync().GetAwaiter().GetResult();
         }
 
+        private void Window_SizeChanged(object sender, WindowSizeChangedEventArgs args)
+        {
+            if (App.MainWindow != null)
+            {
+                ConfigHelper.WindowWidth = (int)App.WindowSize.Width;
+                ConfigHelper.WindowHeight = (int)App.WindowSize.Height;
+            }
+        }
     }
 }

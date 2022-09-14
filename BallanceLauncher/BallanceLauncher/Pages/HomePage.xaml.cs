@@ -28,8 +28,6 @@ namespace BallanceLauncher.Pages
     /// </summary>
     public sealed partial class HomePage : Page
     {
-        private MainWindow _mainWindow;
-
         public HomePage()
         {
             this.InitializeComponent();
@@ -40,7 +38,6 @@ namespace BallanceLauncher.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _mainWindow = e.Parameter as MainWindow;
             UpdateInstanceList();
             base.OnNavigatedTo(e);
         }
@@ -65,25 +62,17 @@ namespace BallanceLauncher.Pages
         {
             InstanceList.Items.Clear();
 
-            //var item = new MenuFlyoutItem();
-            //item.Text = "Ballance";
-            //item.Click += OnItemClick;
-            //InstanceList.Items.Add(item);
-            //InstanceList.Items.Add(new MenuFlyoutSeparator());
-
             foreach (var i in App.Instances)
             {
                 var item = new MenuFlyoutItem { Text = i.Name };
                 item.Click += OnItemClick;
                 InstanceList.Items.Add(item);
             }
-
-            //InstanceName.Text = instanceText;
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindow.NavigateTo("Instances");
+            App.MainWindow.NavigateTo("Instances");
         }
 
         private void DownloadButton_Click(object sender, RoutedEventArgs e)

@@ -40,8 +40,14 @@ namespace BallanceLauncher
     public partial class App : Application
     {
         public static ObservableCollection<BallanceInstance> Instances { get; private set; }
-        public static MainWindow Window { get; private set; }
-        public static IntPtr Hwnd { get; private set; }
+
+        public static Microsoft.UI.Windowing.AppWindow AppWindow { get; private set; }
+        public static MainWindow MainWindow { get; private set; }
+        public static Windows.Graphics.SizeInt32 WindowSize
+        {
+            get => AppWindow.ClientSize;
+            set => AppWindow.Resize(value);
+        }
 
         public static string BaseDir => AppDomain.CurrentDomain.BaseDirectory;
         public static string InfoReaderPath => FileHelper.LocalFolder.Path + "\\BallanceModInfoReader.exe";
@@ -54,7 +60,10 @@ namespace BallanceLauncher
         public App()
         {
             // avoid 're-open'
-            //if (ProcessHelper.HasFormerProcess()) Environment.Exit(1);
+            if (ProcessHelper.HasFormerProcess())
+            {
+                Environment.Exit(1);
+            }
 
             //AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
 
@@ -90,12 +99,12 @@ namespace BallanceLauncher
 
         public static void RestartWindow()
         {
-            if (Window != null)
+            if (MainWindow != null)
             {
-                (var window, var hwnd) = StartWindow();
-                Window.Close();
-                Window = window;
-                Hwnd = hwnd;
+                (var window, var appWindow) = StartWindow();
+                MainWindow.Close();
+                MainWindow = window;
+                AppWindow = appWindow;
             }
         }
 
@@ -106,31 +115,34 @@ namespace BallanceLauncher
                 _ = instance ?? throw new ArgumentNullException(message: "未找到 Ballance 实例", paramName: nameof(instance));
                 if (_runningInstance != null && !_runningInstance.HasExited)
                 {
-                    await DialogHelper.ShowErrorMessageAsync(Window.Content.XamlRoot, "已经有一个 Ballance 在运行啦！").ConfigureAwait(false);
+                    await DialogHelper.ShowErrorMessageAsync(MainWindow.Content.XamlRoot, "已经有一个 Ballance 在运行啦！").ConfigureAwait(false);
                     return;
                 }
                 _runningInstance = ProcessHelper.RunProcess(instance.Executable, instance.WorkingPath, showindow: true);
             }
             catch (Exception ex)
             {
-                await DialogHelper.ShowErrorMessageAsync(Window.Content.XamlRoot, ex.Message, true);
+                await DialogHelper.ShowErrorMessageAsync(MainWindow.Content.XamlRoot, ex.Message, true);
             }
         }
 
         public static Task SaveInstancesAsync() =>
             FileHelper.WriteLocalFileAsync(s_instancesSavePath, JsonConvert.SerializeObject(Instances));
 
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args) =>
-            (Window, Hwnd) = StartWindow();
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        {
+            (MainWindow, AppWindow) = StartWindow();
+            WindowSize = new(ConfigHelper.WindowWidth, ConfigHelper.WindowHeight);
+        }
 
-        private static (MainWindow, IntPtr) StartWindow()
+        private static (MainWindow, Microsoft.UI.Windowing.AppWindow) StartWindow()
         {
             var window = new MainWindow();
-            //window.Closed += async (sender, e) => { await SaveAll(); };
             window.Activate();
-
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
-            return (window, hwnd);
+            var windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hwnd);
+            var appWindow = Microsoft.UI.Windowing.AppWindow.GetFromWindowId(windowId);
+            return (window, appWindow);
         }
 
     }
