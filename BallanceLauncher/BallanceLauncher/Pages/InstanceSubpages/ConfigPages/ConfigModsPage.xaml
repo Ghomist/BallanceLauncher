@@ -137,6 +137,12 @@
                 Icon="More"
                 IsEnabled="False"
                 Label="详情" />
+            <AppBarSeparator />
+            <AppBarButton
+                Name="Browser"
+                Click="Browser_Click"
+                Icon="OpenLocal"
+                Label="打开 Mod 文件夹" />
         </CommandBar>
 
     </Grid>

@@ -15,6 +15,12 @@ namespace BallanceLauncher.Model
         //public string Hash { get; set; }
         public bool Exists { get; private set; }
         public BallanceMapType Type { get; private set; }
+        public string Size => new FileInfo(FullName).Length switch
+        {
+            var x when x < 1024 => $"{x} B",
+            var x when x < 1024 * 1024 => $"{x / 1024} KB",
+            var x => $"{(float)x / 1024 / 1024:f2} MB"
+        };
 
         public BallanceMap() { }
 
@@ -25,7 +31,7 @@ namespace BallanceLauncher.Model
         {
             BallanceMapType.NMO => "NMO",
             BallanceMapType.CMO => "CMO",
-            _ => null,
+            _ => "",
         };
 
         public Symbol GetSymbol() => Type == BallanceMapType.NMO ? Symbol.Map : Symbol.Document;

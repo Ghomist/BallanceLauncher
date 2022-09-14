@@ -33,7 +33,7 @@
         </Style>
     </Page.Resources>
 
-    <StackPanel>
+    <StackPanel HorizontalAlignment="Center">
         <StackPanel Style="{StaticResource InputFormRow}">
             <TextBox
                 x:Name="NameText"

@@ -33,6 +33,8 @@ namespace BallanceLauncher
     /// </summary>
     public sealed partial class MainWindow : Window
     {
+        public IntPtr Hwnd => WinRT.Interop.WindowNative.GetWindowHandle(this);
+
         private string _currentPageTag;
 
         public MainWindow()

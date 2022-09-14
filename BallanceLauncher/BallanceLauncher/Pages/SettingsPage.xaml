@@ -13,13 +13,15 @@
             <Setter Property="BorderBrush" Value="Gray" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="15" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="Margin" Value="0,10" />
             <Setter Property="CornerRadius" Value="4" />
             <Setter Property="Background" Value="#88FFFFFF" />
         </Style>
         <Style x:Key="ConfigHeader" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24" />
-            <Setter Property="Margin" Value="0,0,0,15" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="Margin" Value="10,15,0,0" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="MaxWidth" Value="500" />
         </Style>
@@ -39,7 +41,7 @@
         <!--<ScrollViewer.LeftHeader>
             <TextBlock FontSize="38" Text="设置" />
         </ScrollViewer.LeftHeader>-->
-        <StackPanel Margin="50,30" HorizontalAlignment="Left">
+        <StackPanel Margin="50,30" HorizontalAlignment="Stretch">
 
             <!--<StackPanel Style="{StaticResource ConfigProp}">
                 <InfoBar
@@ -56,8 +58,8 @@
                     </InfoBar.ActionButton>
                 </InfoBar>
             </StackPanel>-->
+            <TextBlock Style="{StaticResource ConfigHeader}" Text="下载" />
             <StackPanel Style="{StaticResource ConfigBlock}">
-                <TextBlock Style="{StaticResource ConfigHeader}" Text="下载设置" />
 
                 <StackPanel Style="{StaticResource ConfigProp}">
                     <!--<NumberBox
@@ -84,8 +86,8 @@
                 </StackPanel>
             </StackPanel>
 
+            <TextBlock Style="{StaticResource ConfigHeader}" Text="启动器" />
             <StackPanel Style="{StaticResource ConfigBlock}">
-                <TextBlock Style="{StaticResource ConfigHeader}" Text="启动器设置" />
 
                 <StackPanel Style="{StaticResource ConfigProp}">
                     <Slider
@@ -110,8 +112,8 @@
                 </StackPanel>
             </StackPanel>
 
+            <TextBlock Style="{StaticResource ConfigHeader}" Text="其它" />
             <StackPanel Style="{StaticResource ConfigBlock}">
-                <TextBlock Style="{StaticResource ConfigHeader}" Text="其它设置" />
 
                 <StackPanel Style="{StaticResource ConfigProp}">
                     <Button

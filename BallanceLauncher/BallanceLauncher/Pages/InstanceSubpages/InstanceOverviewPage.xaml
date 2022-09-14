@@ -12,9 +12,9 @@
     <Page.Resources>
         <DataTemplate x:Key="InstanceCard" x:DataType="model:BallanceInstance">
             <StackPanel
-                Width="180"
-                Height="240"
-                Padding="20,12,12,20"
+                Width="200"
+                Padding="24,18"
+                HorizontalAlignment="Center"
                 AutomationProperties.Name="{x:Bind Name}"
                 BorderBrush="Gray"
                 BorderThickness="1"
@@ -30,24 +30,43 @@
                 </StackPanel.Background>
 
                 <TextBlock
+                    Margin="0,0,0,12"
+                    FontSize="24"
+                    FontWeight="SemiBold"
+                    Text="{x:Bind Name}"
+                    TextAlignment="Center" />
+
+                <TextBlock
                     Margin="0,0,0,8"
-                    Style="{ThemeResource SubtitleTextBlockStyle}"
-                    Text="{x:Bind Name}" />
+                    FontSize="12"
+                    Text="{x:Bind Path}"
+                    TextAlignment="Center" />
 
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="游戏路径：" />
-                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind Path}" />
+                <StackPanel
+                    Margin="0,0,0,8"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        FontSize="12"
+                        Text="BML 安装："
+                        TextAlignment="Center" />
+                    <TextBlock
+                        FontSize="12"
+                        Text="{x:Bind HasBMLInstalled}"
+                        TextAlignment="Center" />
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="BML：" />
-                    <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind HasBMLInstalled}" />
-                </StackPanel>
-
-                <!--<StackPanel Orientation="Horizontal">
-                        <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="Mod：" />
-                        <TextBlock Style="{ThemeResource CaptionTextBlockStyle}" Text="{x:Bind Mods.Count}" />
-                    </StackPanel>-->
+                <!--<StackPanel
+                    Margin="0,5,0,0"
+                    HorizontalAlignment="Center"
+                    Orientation="Horizontal">
+                    <Button Margin="0,0,10,0">
+                        <SymbolIcon Symbol="Setting" />
+                    </Button>
+                    <Button>
+                        <SymbolIcon Symbol="Play" />
+                    </Button>
+                </StackPanel>-->
 
             </StackPanel>
         </DataTemplate>
@@ -63,25 +82,6 @@
             ItemTemplate="{StaticResource InstanceCard}"
             ItemsSource="{x:Bind app:App.Instances}"
             SelectionMode="None">
-            <!--
-                SelectionChanged="ContentGridView_SelectionChanged"
-                ItemClick="ContentGridView_ItemClick"
-            -->
-
-            <!--<GridView.Header>
-                <TextBlock Style="{ThemeResource HeaderTextBlockStyle}" Text="所有游戏" />
-            </GridView.Header>-->
-            <GridView.Items>
-                <GridViewItem>
-                    <StackPanel
-                        Width="180"
-                        Height="240"
-                        Padding="12"
-                        BorderBrush="Gray"
-                        BorderThickness="1"
-                        CornerRadius="4" />
-                </GridViewItem>
-            </GridView.Items>
 
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>

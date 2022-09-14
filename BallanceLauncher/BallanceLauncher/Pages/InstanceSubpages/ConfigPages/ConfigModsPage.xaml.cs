@@ -70,9 +70,39 @@ namespace BallanceLauncher.Pages
             FreshModList();
         }
 
-        private void Add_Click(object sender, RoutedEventArgs e)
+        private async void Add_Click(object sender, RoutedEventArgs e)
         {
-            // TODO
+            var picker = new Windows.Storage.Pickers.FileOpenPicker()
+            {
+                //picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop
+            };
+            picker.FileTypeFilter.Add(".bmod");
+            picker.FileTypeFilter.Add(".zip");
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, App.MainWindow.Hwnd);
+
+            var files = await picker.PickMultipleFilesAsync();
+            if (files != null && files.Count != 0)
+            {
+                int existCount = 0;
+                var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "添加 Mod");
+                await Task.Run(() =>
+                {
+                    foreach (var f in files)
+                    {
+                        if (File.Exists(_instance.MapDir + f.Name))
+                        {
+                            existCount++;
+                            continue;
+                        }
+                        File.Copy(f.Path, _instance.MapDir + f.Name, false);
+                    }
+                });
+                DialogHelper.FinishProcessingDialog(dlg, existCount == 0 ? "搞定！" : $"完成！有{existCount}个 Mod 已经存在了");
+
+                FreshModList();
+            }
+
         }
 
         private async void Delete_Click(object sender, RoutedEventArgs e)
@@ -119,6 +149,11 @@ namespace BallanceLauncher.Pages
                     _selectedItems.Remove(_selectedItems.FirstOrDefault((o) => o.Hash == mod.Hash));
             More.IsEnabled = _selectedItems.Count == 1;
             Delete.IsEnabled = _selectedItems.Count > 0;
+        }
+
+        private void Browser_Click(object sender, RoutedEventArgs e)
+        {
+            ProcessHelper.RunProcess("explorer.exe", args: _instance.ModDir);
         }
     }
 }

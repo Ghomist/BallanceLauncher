@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -77,6 +78,45 @@ namespace BallanceLauncher.Pages
         private void Fresh_Click(object sender, RoutedEventArgs e)
         {
             FreshMapList();
+        }
+
+        private async void Add_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker()
+            {
+                //picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
+                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Desktop
+            };
+            picker.FileTypeFilter.Add(".nmo");
+            picker.FileTypeFilter.Add(".cmo");
+            WinRT.Interop.InitializeWithWindow.Initialize(picker, App.MainWindow.Hwnd);
+
+            var files = await picker.PickMultipleFilesAsync();
+            if (files != null && files.Count != 0)
+            {
+                int existCount = 0;
+                var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "添加地图");
+                await Task.Run(() =>
+                {
+                    foreach (var f in files)
+                    {
+                        if (File.Exists(_instance.MapDir + f.Name))
+                        {
+                            existCount++;
+                            continue;
+                        }
+                        File.Copy(f.Path, _instance.MapDir + f.Name, false);
+                    }
+                });
+                DialogHelper.FinishProcessingDialog(dlg, existCount == 0 ? "搞定！" : $"完成！有{existCount}个地图已经存在了");
+
+                FreshMapList();
+            }
+        }
+
+        private void Browser_Click(object sender, RoutedEventArgs e)
+        {
+            ProcessHelper.RunProcess("explorer.exe", args: _instance.MapDir);
         }
     }
 }
