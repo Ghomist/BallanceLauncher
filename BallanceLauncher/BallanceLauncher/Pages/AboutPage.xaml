@@ -19,15 +19,15 @@
         </Style>
     </Page.Resources>
 
-    <StackPanel Padding="30,0,20,0">
-        <StackPanel.Background>
+    <ScrollViewer Padding="30,0,20,0">
+        <ScrollViewer.Background>
             <AcrylicBrush
                 FallbackColor="WhiteSmoke"
                 Opacity="0.4"
                 TintColor="White"
                 TintLuminosityOpacity="1"
                 TintOpacity="0" />
-        </StackPanel.Background>
+        </ScrollViewer.Background>
         <StackPanel>
 
             <TextBlock Style="{StaticResource Header}" Text="关于 Ballance Launcher X！" />
@@ -71,5 +71,5 @@
             <StackPanel Height="30" />
 
         </StackPanel>
-    </StackPanel>
+    </ScrollViewer>
 </Page>

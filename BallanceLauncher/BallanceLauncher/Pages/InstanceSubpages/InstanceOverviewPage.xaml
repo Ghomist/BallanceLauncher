@@ -24,7 +24,7 @@
                 Tapped="StackPanel_Tapped">
                 <StackPanel.Background>
                     <AcrylicBrush
-                        FallbackColor="LightGray"
+                        FallbackColor="WhiteSmoke"
                         TintLuminosityOpacity="0.5"
                         TintOpacity="0.5" />
                 </StackPanel.Background>

@@ -39,6 +39,7 @@
                     <TextBlock Style="{StaticResource InfoKey}" Text="你给我起的名字" />
                     <TextBox
                         x:Name="NameTextBox"
+                        IsReadOnly="True"
                         Text="{x:Bind _instance.Name}"
                         TextChanged="NameTextBox_TextChanged" />
                 </StackPanel>

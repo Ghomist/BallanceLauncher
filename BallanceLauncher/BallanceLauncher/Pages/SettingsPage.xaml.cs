@@ -24,29 +24,42 @@ namespace BallanceLauncher.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            DecimalFormatter formatter = new()
-            {
-                IntegerDigits = 1,
-                FractionDigits = 1,
-                NumberRounder = new IncrementNumberRounder()
-                {
-                    Increment = 0.1,
-                    RoundingAlgorithm = RoundingAlgorithm.RoundHalfToEven
-                }
-            };
-            ForceFetchInterval.NumberFormatter = formatter;
+            //DecimalFormatter formatter = new()
+            //{
+            //    IntegerDigits = 1,
+            //    FractionDigits = 1,
+            //    NumberRounder = new IncrementNumberRounder()
+            //    {
+            //        Increment = 0.1,
+            //        RoundingAlgorithm = RoundingAlgorithm.RoundHalfToEven
+            //    }
+            //};
+            //ForceFetchInterval.NumberFormatter = formatter;
 
             base.OnNavigatedTo(e);
         }
 
         private void AcrylicOpacity_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            App.Window.SetAcrylicOpacity(ConfigHelper.AcrylicOpacity);
+            App.MainWindow.SetAcrylicOpacity(ConfigHelper.AcrylicOpacity);
         }
 
         private void ShowSystemTitleBar_Toggled(object sender, RoutedEventArgs e)
         {
-            App.Window.UpdateTitleBar((sender as ToggleSwitch).IsOn);
+            App.MainWindow.UpdateTitleBar((sender as ToggleSwitch).IsOn);
+        }
+
+        private void ClearTemp_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "删除下载缓存");
+            FileHelper.DeleteTemporaryFilesAsync();
+            DialogHelper.FinishProcessingDialog(dlg, "完成！");
+        }
+
+        private void RestoreConfig_Click(object sender, RoutedEventArgs e)
+        {
+            ConfigHelper.ClearConfig();
+            Bindings.Update();
         }
     }
 }

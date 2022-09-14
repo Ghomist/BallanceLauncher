@@ -9,9 +9,17 @@
     xmlns:utils="using:BallanceLauncher.Utils"
     mc:Ignorable="d">
     <Page.Resources>
+        <Style x:Key="ConfigBlock" TargetType="StackPanel">
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="15" />
+            <Setter Property="Margin" Value="0,10" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Background" Value="#88FFFFFF" />
+        </Style>
         <Style x:Key="ConfigHeader" TargetType="TextBlock">
             <Setter Property="FontSize" Value="24" />
-            <Setter Property="Margin" Value="0,10,0,20" />
+            <Setter Property="Margin" Value="0,0,0,15" />
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="MaxWidth" Value="500" />
         </Style>
@@ -23,7 +31,7 @@
             <Setter Property="MaxWidth" Value="500" />
         </Style>
         <Style x:Key="SliderProp" TargetType="Slider">
-            <Setter Property="Width" Value="150" />
+            <!--<Setter Property="Width" Value="150" />-->
         </Style>
     </Page.Resources>
 
@@ -48,11 +56,11 @@
                     </InfoBar.ActionButton>
                 </InfoBar>
             </StackPanel>-->
+            <StackPanel Style="{StaticResource ConfigBlock}">
+                <TextBlock Style="{StaticResource ConfigHeader}" Text="下载设置" />
 
-            <TextBlock Style="{StaticResource ConfigHeader}" Text="下载设置" />
-
-            <StackPanel Style="{StaticResource ConfigProp}">
-                <NumberBox
+                <StackPanel Style="{StaticResource ConfigProp}">
+                    <!--<NumberBox
                     x:Name="ForceFetchInterval"
                     MaxWidth="500"
                     Header="地图列表缓存最长时间（单位：小时）"
@@ -63,30 +71,61 @@
                     SmallChange="0.1"
                     SpinButtonPlacementMode="Inline"
                     ValidationMode="InvalidInputOverwritten"
-                    Value="{x:Bind utils:ConfigHelper.ForceFetchInterval, Mode=TwoWay}" />
+                    Value="{x:Bind utils:ConfigHelper.ForceFetchInterval, Mode=TwoWay}" />-->
+                    <Slider
+                        x:Name="ForceFetchInterval"
+                        Header="地图列表缓存时间"
+                        Maximum="3"
+                        Minimum="0"
+                        StepFrequency="0.1"
+                        Style="{StaticResource SliderProp}"
+                        ToolTipService.ToolTip="单位：小时，推荐设置值为：0.5~1"
+                        Value="{x:Bind utils:ConfigHelper.ForceFetchInterval, Mode=TwoWay}" />
+                </StackPanel>
             </StackPanel>
 
-            <TextBlock Style="{StaticResource ConfigHeader}" Text="启动器设置" />
+            <StackPanel Style="{StaticResource ConfigBlock}">
+                <TextBlock Style="{StaticResource ConfigHeader}" Text="启动器设置" />
 
-            <StackPanel Style="{StaticResource ConfigProp}">
-                <Slider
-                    x:Name="AcrylicOpacity"
-                    Header="亚克力不透明度"
-                    Maximum="1"
-                    Minimum="0"
-                    StepFrequency="0.01"
-                    Style="{StaticResource SliderProp}"
-                    ValueChanged="AcrylicOpacity_ValueChanged"
-                    Value="{x:Bind utils:ConfigHelper.AcrylicOpacity, Mode=TwoWay}" />
+                <StackPanel Style="{StaticResource ConfigProp}">
+                    <Slider
+                        x:Name="AcrylicOpacity"
+                        Header="亚克力不透明度"
+                        Maximum="1"
+                        Minimum="0"
+                        StepFrequency="0.01"
+                        Style="{StaticResource SliderProp}"
+                        ToolTipService.ToolTip="亚克力效果在省电模式下会被禁用"
+                        ValueChanged="AcrylicOpacity_ValueChanged"
+                        Value="{x:Bind utils:ConfigHelper.AcrylicOpacity, Mode=TwoWay}" />
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource ConfigProp}">
+                    <ToggleSwitch
+                        x:Name="ShowSystemTitleBar"
+                        Header="显示系统标题栏"
+                        IsEnabled="True"
+                        IsOn="{x:Bind utils:ConfigHelper.ShowSystemTitleBar, Mode=TwoWay}"
+                        Toggled="ShowSystemTitleBar_Toggled" />
+                </StackPanel>
             </StackPanel>
 
-            <StackPanel Style="{StaticResource ConfigProp}">
-                <ToggleSwitch
-                    x:Name="ShowSystemTitleBar"
-                    Header="显示系统标题栏"
-                    IsEnabled="True"
-                    IsOn="{x:Bind utils:ConfigHelper.ShowSystemTitleBar, Mode=TwoWay}"
-                    Toggled="ShowSystemTitleBar_Toggled" />
+            <StackPanel Style="{StaticResource ConfigBlock}">
+                <TextBlock Style="{StaticResource ConfigHeader}" Text="其它设置" />
+
+                <StackPanel Style="{StaticResource ConfigProp}">
+                    <Button
+                        Name="ClearTemp"
+                        Click="ClearTemp_Click"
+                        Content="清除下载缓存" />
+                </StackPanel>
+
+                <StackPanel Style="{StaticResource ConfigProp}">
+                    <Button
+                        Name="RestoreConfig"
+                        Click="RestoreConfig_Click"
+                        Content="还原默认设置" />
+                </StackPanel>
             </StackPanel>
 
 
