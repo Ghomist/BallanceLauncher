@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Shapes;
 using Newtonsoft.Json;
+using Swung0x48.Ballance.TdbReader;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,11 +40,12 @@ namespace BallanceLauncher.Model
         }
 
         // paths
-        public string WorkingPath => Path + @"bin\";
-        public string Executable => WorkingPath + @"player.exe";
+        public string WorkingDir => Path + @"bin\";
+        public string Executable => WorkingDir + @"player.exe";
         public string BMLDir => HasBMLInstalled ? Path + @"ModLoader\" : "没有找到 BML";
         public string ModDir => HasBMLInstalled ? BMLDir + @"Mods\" : "没有安装 BML";
         public string MapDir => HasBMLInstalled ? BMLDir + @"Maps\" : "没有安装 BML";
+        public string Database => Path + @"Database.tdb";
 
         public bool Exists => Directory.Exists(Path) && File.Exists(Executable);
         public bool HasBMLInstalled => File.Exists(Path + @"BuildingBlocks\BML.dll") && Directory.Exists(Path + @"ModLoader\");
@@ -146,7 +148,7 @@ namespace BallanceLauncher.Model
             });
         }
 
-        public async Task InstallBMLAsync() => await FileHelper.ExtractBMLAsync(this);
+        public Task InstallBMLAsync() => FileHelper.ExtractBMLAsync(this);
 
         public void UninstallBML(bool force = false)
         {

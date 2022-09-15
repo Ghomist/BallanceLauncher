@@ -118,7 +118,7 @@ namespace BallanceLauncher
                     await DialogHelper.ShowErrorMessageAsync(MainWindow.Content.XamlRoot, "已经有一个 Ballance 在运行啦！").ConfigureAwait(false);
                     return;
                 }
-                _runningInstance = ProcessHelper.RunProcess(instance.Executable, instance.WorkingPath, showindow: true);
+                _runningInstance = ProcessHelper.RunProcess(instance.Executable, instance.WorkingDir, showindow: true);
             }
             catch (Exception ex)
             {

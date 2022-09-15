@@ -1,0 +1,6 @@
+[submodule "submodule"]
+	path = submodule
+	url = https://github.com/BearKidsTeam/BallanceRecordChanger.git
+[submodule "BallanceLauncher/BallanceLauncher/Submodules"]
+	path = BallanceLauncher/BallanceLauncher/Submodules
+	url = https://github.com/BearKidsTeam/BallanceRecordChanger.git

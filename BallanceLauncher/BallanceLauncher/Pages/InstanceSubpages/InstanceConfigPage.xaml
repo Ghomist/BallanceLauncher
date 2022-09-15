@@ -69,6 +69,12 @@
                     </StackPanel>
                 </ListViewItem>
                 <ListViewItem>
+                    <StackPanel Orientation="Horizontal" Tag="Records">
+                        <SymbolIcon Symbol="OpenWith" />
+                        <TextBlock Margin="12,0,0,0" Text="纪录管理" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem>
                     <StackPanel Orientation="Horizontal" Tag="Other">
                         <SymbolIcon Symbol="Setting" />
                         <TextBlock Margin="12,0,0,0" Text="其它设置" />

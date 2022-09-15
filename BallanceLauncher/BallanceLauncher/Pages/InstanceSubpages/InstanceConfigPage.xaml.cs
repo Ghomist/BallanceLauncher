@@ -76,6 +76,10 @@ namespace BallanceLauncher.Pages
                     SettingHeader.Text = "自定义地图";
                     SettingContent.Navigate(typeof(ConfigMapsPage), _instance);
                     break;
+                case "Records":
+                    SettingHeader.Text = "纪录管理";
+                    SettingContent.Navigate(typeof(RecordPage), _instance);
+                    break;
                 case "Other":
                     SettingHeader.Text = "其它设置";
                     SettingContent.Navigate(typeof(OperationPage), (_instance, _parentPage));
