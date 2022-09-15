@@ -42,6 +42,15 @@
                     BorderBrush="Gray"
                     BorderThickness="1"
                     CornerRadius="8">
+                    <ScrollViewer.Background>
+                        <AcrylicBrush
+                            x:Name="BackgroundAcrylic"
+                            FallbackColor="WhiteSmoke"
+                            Opacity="0.5"
+                            TintColor="White"
+                            TintLuminosityOpacity="0.8"
+                            TintOpacity="0" />
+                    </ScrollViewer.Background>
                     <ListView ItemTemplate="{StaticResource Props}" ItemsSource="{x:Bind Props}" />
                 </ScrollViewer>
             </PivotItem>

@@ -22,6 +22,7 @@
                         TintOpacity="0" />
                 </Setter.Value>
             </Setter>
+            <Setter Property="Margin" Value="0,12,0,4" />
             <Setter Property="BorderBrush" Value="{ThemeResource CheckBoxBorderThemeBrush}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
