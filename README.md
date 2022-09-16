@@ -8,6 +8,10 @@
 
 -   实例化管理
     -   实例离线安装
+-   Database.tdb 管理
+    -   关卡解锁
+    -   游戏内设置
+    -   纪录管理
 -   BML(+) 管理
     -   MOD、自制地图管理
     -   MOD 信息读取
@@ -26,11 +30,11 @@
 ### 即将实现的特性
 
 -   MOD 下载
--   材质包下载
--   启动器基本设置
--   管理启动实例
+-   材质包下载、管理
+-   音效下载、管理
+-   管理已启动实例
 -   DIY 背景图
--   启动参数管理
+-   Ballance 启动参数管理
 
 ### 兼容性
 
@@ -56,6 +60,7 @@ NuGet
 -   [Microsoft.WindowsAppSDK](https://github.com/microsoft/windowsappsdk) 1.1.4
 -   [Newtonsoft.Json](https://www.newtonsoft.com/json) 13.0.1
 -   [WpfCore.FolderPicker](https://github.com/dove-team/WpfCore.FolderPicker) 1.0.0
+-   [Swung0x48.Ballance.TdbReader](https://www.nuget.org/packages/Swung0x48.Ballance.TdbReader/1.1.0) 1.1.0
 
 其它依赖
 
@@ -74,7 +79,7 @@ git clone https://github.com/Ghomist/BallanceLauncher.git
 
 2. 使用 Visual Studio 2022 打开 `BallanceLauncher.sln`
 
-3. 补全内嵌的二进制文件，并设置其编译属性
+3. 设置需内嵌编译的二进制文件，并设置其编译属性
 
 以下路径均相对该源码根目录：[`./BallanceLauncher/BallanceLauncher/`](./BallanceLauncher/BallanceLauncher/)
 
