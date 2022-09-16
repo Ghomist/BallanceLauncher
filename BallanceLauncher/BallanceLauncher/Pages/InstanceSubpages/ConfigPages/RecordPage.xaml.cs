@@ -35,19 +35,18 @@ namespace BallanceLauncher.Pages
             this.InitializeComponent();
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _instance = e.Parameter as BallanceInstance;
             base.OnNavigatedTo(e);
-
-            _database = await TdbHelper.ReadDatabaseAsync(_instance.Database).ConfigureAwait(false);
-            await FreshRecords();
         }
 
         private Task FreshRecords()
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
+                _database = await TdbHelper.ReadDatabaseAsync(_instance.Database).ConfigureAwait(false);
+
                 int levelCount = _database.Lv13Enable ? 13 : 12;
                 var recordLists = new List<RecordList>();
                 for (int i = 1; i <= levelCount; ++i)
@@ -74,7 +73,6 @@ namespace BallanceLauncher.Pages
                 var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "清除纪录");
                 _database.ClearRecordsOf(level);
                 await TdbHelper.WriteDatabaseAsync(_database, _instance.Database);
-                _database = await TdbHelper.ReadDatabaseAsync(_instance.Database);
                 await FreshRecords();
                 DialogHelper.FinishProcessingDialog(dlg, "搞定！");
             }
@@ -89,10 +87,14 @@ namespace BallanceLauncher.Pages
                 var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "清除纪录");
                 _database.ClearAllRecords();
                 await TdbHelper.WriteDatabaseAsync(_database, _instance.Database);
-                _database = await TdbHelper.ReadDatabaseAsync(_instance.Database);
                 await FreshRecords();
                 DialogHelper.FinishProcessingDialog(dlg, "搞定！");
             }
+        }
+
+        private async void Records_Loaded(object sender, RoutedEventArgs e)
+        {
+            await FreshRecords();
         }
     }
 

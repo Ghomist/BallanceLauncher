@@ -1,0 +1,272 @@
+﻿<Page
+    x:Class="BallanceLauncher.Pages.GameSettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:BallanceLauncher.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style x:Key="PropCategory" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Margin" Value="5,8" />
+        </Style>
+        <Style x:Key="PropKey" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="16" />
+            <!--<Setter Property="FontWeight" Value="SemiBold" />-->
+            <Setter Property="Margin" Value="0,8" />
+        </Style>
+        <Style x:Key="PropGrid" TargetType="Grid">
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Background" Value="#88FFFFFF" />
+            <Setter Property="Padding" Value="25,10" />
+            <Setter Property="ColumnSpacing" Value="50" />
+        </Style>
+        <!--<TeachingTip
+            x:Name="SaveTip"
+            Title="设置项已更改！"
+            ActionButtonClick=""
+            ActionButtonContent="现在就存"
+            CloseButtonContent="算啦"
+            IsLightDismissEnabled="True"
+            PlacementMargin="20"
+            PreferredPlacement="Auto"
+            Subtitle="游戏内设置不会自动保存！是否将所有改动保存？" />-->
+    </Page.Resources>
+
+    <Grid>
+        <ScrollViewer>
+            <StackPanel>
+
+                <TextBlock Style="{StaticResource PropCategory}" Text="游戏内设置" />
+
+                <Grid Style="{StaticResource PropGrid}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="2" />
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Style="{StaticResource PropKey}"
+                        Text="保存游戏内设置" />
+                    <Button
+                        Name="SaveIngameSettings"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Click="SaveIngameSettings_Click"
+                        Content="保存"
+                        IsEnabled="False" />
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Style="{StaticResource PropKey}"
+                        Text="垂直同步" />
+                    <ToggleSwitch
+                        Name="SynchToScreen"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Style="{StaticResource PropKey}"
+                        Text="反转相机旋转" />
+                    <ToggleSwitch
+                        Name="InvertCamRotation"
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="3"
+                        Style="{StaticResource PropKey}"
+                        Text="开启云层" />
+                    <ToggleSwitch
+                        Name="CloudLayer"
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="4"
+                        Style="{StaticResource PropKey}"
+                        Text="游戏内音量" />
+                    <Slider
+                        Name="Volume"
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Maximum="100"
+                        Minimum="0"
+                        StepFrequency="1"
+                        ValueChanged="Slider_ValueChanged" />
+
+                </Grid>
+
+                <TextBlock Style="{StaticResource PropCategory}" Text="原版关卡解锁" />
+
+                <Grid x:Name="LevelStatus" Style="{StaticResource PropGrid}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="2" />
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Style="{StaticResource PropKey}"
+                        Text="保存关卡解锁情况" />
+                    <Button
+                        Name="SaveIngameSettings2"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Click="SaveIngameSettings_Click"
+                        Content="保存"
+                        IsEnabled="False" />
+
+                    <!--<TextBlock
+                        Grid.Row="1"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_01" />
+                    <ToggleSwitch
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv1State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_02" />
+                    <ToggleSwitch
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv2State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="4"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_04" />
+                    <ToggleSwitch
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv4State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="5"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_05" />
+                    <ToggleSwitch
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv5State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="6"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_06" />
+                    <ToggleSwitch
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv6State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="7"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_07" />
+                    <ToggleSwitch
+                        Grid.Row="7"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv7State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="8"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_08" />
+                    <ToggleSwitch
+                        Grid.Row="8"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv8State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="9"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_09" />
+                    <ToggleSwitch
+                        Grid.Row="9"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv9State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="10"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_10" />
+                    <ToggleSwitch
+                        Grid.Row="10"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv10State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="11"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_11" />
+                    <ToggleSwitch
+                        Grid.Row="11"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv11State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="12"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_12" />
+                    <ToggleSwitch
+                        Grid.Row="12"
+                        Grid.Column="1"
+                        IsOn="{x:Bind _database.Lv12State, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />-->
+
+                </Grid>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

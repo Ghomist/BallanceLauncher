@@ -53,7 +53,7 @@
                     <TextBlock Style="{StaticResource InfoKey}" Text="BML" />
                     <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.HasBMLInstalled}" />
                 </StackPanel>
-                <StackPanel Style="{StaticResource InfoLine}">
+                <!--<StackPanel Style="{StaticResource InfoLine}">
                     <TextBlock Style="{StaticResource InfoKey}" Text="自制地图在哪" />
                     <Button Click="BrowseMapDir">
                         <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.MapDir}" />
@@ -64,7 +64,7 @@
                     <Button Click="BrowseModDir">
                         <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.ModDir}" />
                     </Button>
-                </StackPanel>
+                </StackPanel>-->
                 <StackPanel Style="{StaticResource InfoLine}">
                     <TextBlock Style="{StaticResource InfoKey}" Text="玩的时候开的哪里" />
                     <TextBlock Style="{StaticResource Info}" Text="{x:Bind _instance.Executable}" />

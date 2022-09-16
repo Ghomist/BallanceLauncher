@@ -46,16 +46,27 @@
                 SelectionMode="Single">
                 <ListViewItem IsSelected="True">
                     <StackPanel Orientation="Horizontal" Tag="Basic">
-                        <SymbolIcon Symbol="Repair" />
-                        <TextBlock Margin="12,0,0,0" Text="基本设置" />
+                        <!--  Info  -->
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE946;" />
+                        <TextBlock Margin="12,0,0,0" Text="基本信息" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem>
+                    <StackPanel Orientation="Horizontal" Tag="Settings">
+                        <!--  Equalizer  -->
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE9E9;" />
+                        <TextBlock Margin="12,0,0,0" Text="游戏设置" />
                     </StackPanel>
                 </ListViewItem>
                 <!--<ListViewItem>
-                            <StackPanel Orientation="Horizontal" Tag="BML">
-                                <SymbolIcon Symbol="Flag" />
-                                <TextBlock Margin="12,0,0,0" Text="BML 设置" />
-                            </StackPanel>
-                        </ListViewItem>-->
+                    <StackPanel Orientation="Horizontal" Tag="Keyboard">
+                -->
+                <!--  KeyboardSettings  -->
+                <!--
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xF210;" />
+                        <TextBlock Margin="12,0,0,0" Text="按键设置" />
+                    </StackPanel>
+                </ListViewItem>-->
                 <ListViewItem Visibility="{x:Bind _instance.ModPropVisibility}">
                     <StackPanel Orientation="Horizontal" Tag="Mods">
                         <SymbolIcon Symbol="Library" />
@@ -68,6 +79,24 @@
                         <TextBlock Margin="12,0,0,0" Text="自定义地图" />
                     </StackPanel>
                 </ListViewItem>
+                <!--<ListViewItem>
+                    <StackPanel Orientation="Horizontal" Tag="Texture">
+                -->
+                <!--  AppIconDefault  -->
+                <!--
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xECAA;" />
+                        <TextBlock Margin="12,0,0,0" Text="材质及贴图" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem>
+                    <StackPanel Orientation="Horizontal" Tag="Sounds">
+                -->
+                <!--  Audio  -->
+                <!--
+                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE8D6;" />
+                        <TextBlock Margin="12,0,0,0" Text="音乐及音效" />
+                    </StackPanel>
+                </ListViewItem>-->
                 <ListViewItem>
                     <StackPanel Orientation="Horizontal" Tag="Records">
                         <SymbolIcon Symbol="OpenWith" />

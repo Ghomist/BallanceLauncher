@@ -40,7 +40,9 @@
     <None Remove="Pages\ConfigModsPage.xaml" />
     <None Remove="Pages\DownloadMapDetailsPage.xaml" />
     <None Remove="Pages\DownloadPages\InstanceSelectPage.xaml" />
+    <None Remove="Pages\GameSettingsPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
+    <None Remove="Pages\IngameSettingsPage.xaml" />
     <None Remove="Pages\InstanceAddPage.xaml" />
     <None Remove="Pages\InstanceInstallPage.xaml" />
     <None Remove="Pages\InstanceOverviewPage.xaml" />
@@ -71,6 +73,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swung0x48.Ballance.TdbReader" Version="1.1.0" />
     <PackageReference Include="WpfCore.FolderPicker" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\InstanceSubpages\ConfigPages\GameSettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

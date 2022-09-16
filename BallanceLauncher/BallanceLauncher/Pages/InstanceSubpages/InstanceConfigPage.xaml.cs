@@ -64,10 +64,10 @@ namespace BallanceLauncher.Pages
                     SettingHeader.Text = "基本信息";
                     SettingContent.Navigate(typeof(BasicConfigPage), _instance);
                     break;
-                //case "BML":
-                //    SettingHeader.Text = "BML 设置";
-                //    SettingContent.Navigate(typeof(TestPage));
-                //    break;
+                case "Settings":
+                    SettingHeader.Text = "游戏设置";
+                    SettingContent.Navigate(typeof(GameSettingsPage), _instance);
+                    break;
                 case "Mods":
                     SettingHeader.Text = "Mods";
                     SettingContent.Navigate(typeof(ConfigModsPage), _instance);
@@ -84,6 +84,7 @@ namespace BallanceLauncher.Pages
                     SettingHeader.Text = "其它设置";
                     SettingContent.Navigate(typeof(OperationPage), (_instance, _parentPage));
                     break;
+                default: break;
             }
             _currentTag = tag;
         }
