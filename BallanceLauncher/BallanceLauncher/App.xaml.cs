@@ -45,7 +45,7 @@ namespace BallanceLauncher
         public static MainWindow MainWindow { get; private set; }
         public static Windows.Graphics.SizeInt32 WindowSize
         {
-            get => AppWindow.ClientSize;
+            get => AppWindow.Size;
             set => AppWindow.Resize(value);
         }
 
