@@ -35,15 +35,13 @@ namespace BallanceLauncher.Pages
             this.InitializeComponent();
         }
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _selectedItems = new();
+            base.OnNavigatedTo(e);
 
             _instance = e.Parameter as BallanceInstance;
-
-            _maps = await _instance.GetMapsAsync();
-            MapList.ItemsSource = _maps;
-            base.OnNavigatedTo(e);
+            _selectedItems = new();
+            FreshMapList();
         }
 
         private async void Delete_Click(object sender, RoutedEventArgs e)
@@ -69,10 +67,13 @@ namespace BallanceLauncher.Pages
             Delete.IsEnabled = _selectedItems.Count > 0;
         }
 
-        private async void FreshMapList()
+        private void FreshMapList()
         {
-            _maps = await _instance.GetMapsAsync();
-            MapList.ItemsSource = _maps;
+            Task.Run(async () =>
+            {
+                _maps = await _instance.GetMapsAsync();
+                DispatcherQueue.TryEnqueue(() => MapList.ItemsSource = _maps);
+            });
         }
 
         private void Fresh_Click(object sender, RoutedEventArgs e)

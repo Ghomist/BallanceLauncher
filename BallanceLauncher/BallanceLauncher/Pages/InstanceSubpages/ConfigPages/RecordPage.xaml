@@ -63,8 +63,7 @@
             Margin="0"
             CanBeScrollAnchor="True"
             IsHeaderItemsCarouselEnabled="False"
-            ItemTemplate="{StaticResource Records}"
-            Loaded="Records_Loaded">
+            ItemTemplate="{StaticResource Records}">
             <Pivot.RightHeader>
                 <CommandBar DefaultLabelPosition="Right" OverflowButtonVisibility="Collapsed">
                     <AppBarButton

@@ -10,11 +10,20 @@ namespace BallanceLauncher.Model
 {
     public class BallanceMap
     {
-        public string DisplayName { get; private set; }
-        public string FullName { get; private set; }
-        //public string Hash { get; set; }
-        public bool Exists { get; private set; }
-        public BallanceMapType Type { get; private set; }
+        public readonly string DisplayName;
+        public readonly string FullName;
+
+        public bool Exists => File.Exists(FullName);
+
+        private readonly BallanceMapType _type;
+        public string Type => _type switch
+        {
+            BallanceMapType.NMO => "NMO",
+            BallanceMapType.CMO => "CMO",
+            _ => "",
+        };
+        public Symbol TypeSymbol => _type == BallanceMapType.NMO ? Symbol.Map : Symbol.Document;
+
         public string Size => new FileInfo(FullName).Length switch
         {
             var x when x < 1024 => $"{x} B",
@@ -23,31 +32,17 @@ namespace BallanceLauncher.Model
         };
 
         public BallanceMap() { }
-
         public BallanceMap(string fullName, string displayName, BallanceMapType type) =>
-            (FullName, DisplayName, Type, Exists) = (fullName, displayName, type, true);
+            (FullName, DisplayName, _type) = (fullName, displayName, type);
 
-        public string GetTypeString() => Type switch
-        {
-            BallanceMapType.NMO => "NMO",
-            BallanceMapType.CMO => "CMO",
-            _ => "",
-        };
-
-        public Symbol GetSymbol() => Type == BallanceMapType.NMO ? Symbol.Map : Symbol.Document;
-
-        public void Delete()
-        {
-            File.Delete(FullName);
-            Exists = false;
-        }
+        public void Delete() => File.Delete(FullName);
 
         public override string ToString() => DisplayName;
 
         public override bool Equals(object obj) => obj is BallanceMap map
-            && (map.DisplayName, map.Type) == (DisplayName, Type);
+            && (map.DisplayName, map._type) == (DisplayName, _type);
 
-        public override int GetHashCode() => (DisplayName + '.' + GetTypeString()).GetHashCode();
+        public override int GetHashCode() => (DisplayName + '.' + Type).GetHashCode();
     }
 
     public enum BallanceMapType

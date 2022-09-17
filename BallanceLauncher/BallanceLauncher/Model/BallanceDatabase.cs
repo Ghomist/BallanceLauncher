@@ -15,14 +15,17 @@ namespace BallanceLauncher.Model
         private readonly VirtoolsArray _levelActivate;
         private readonly VirtoolsArray _options;
 
-        public bool Lv13Enable => Data.Length > 14;
+        public readonly bool Lv13Enable;
 
         public BallanceDatabase(VirtoolsArray[] data)
         {
             Data = data;
+            Lv13Enable = Data.Length > 14;
             _levelActivate = Data.FirstOrDefault(d => d.SheetName == "DB_Levelfreischaltung");
             _options = Data.FirstOrDefault(d => d.SheetName == "DB_Options");
         }
+
+        #region Record Related
 
         public (string, int)[] GetRecordsOf(int level)
         {
@@ -61,70 +64,14 @@ namespace BallanceLauncher.Model
             }
         }
 
-        //public bool Lv1State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 0] == 1;
-        //    set => _levelActivate.Cells[0, 0] = value ? 1 : 0;
-        //}
-        //public bool Lv2State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 1] == 1;
-        //    set => _levelActivate.Cells[0, 1] = value ? 1 : 0;
-        //}
-        //public bool Lv3State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 2] == 1;
-        //    set => _levelActivate.Cells[0, 2] = value ? 1 : 0;
-        //}
-        //public bool Lv4State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 3] == 1;
-        //    set => _levelActivate.Cells[0, 3] = value ? 1 : 0;
-        //}
-        //public bool Lv5State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 4] == 1;
-        //    set => _levelActivate.Cells[0, 4] = value ? 1 : 0;
-        //}
-        //public bool Lv6State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 5] == 1;
-        //    set => _levelActivate.Cells[0, 5] = value ? 1 : 0;
-        //}
-        //public bool Lv7State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 6] == 1;
-        //    set => _levelActivate.Cells[0, 6] = value ? 1 : 0;
-        //}
-        //public bool Lv8State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 7] == 1;
-        //    set => _levelActivate.Cells[0, 7] = value ? 1 : 0;
-        //}
-        //public bool Lv9State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 8] == 1;
-        //    set => _levelActivate.Cells[0, 8] = value ? 1 : 0;
-        //}
-        //public bool Lv10State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 9] == 1;
-        //    set => _levelActivate.Cells[0, 9] = value ? 1 : 0;
-        //}
-        //public bool Lv11State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 10] == 1;
-        //    set => _levelActivate.Cells[0, 10] = value ? 1 : 0;
-        //}
-        //public bool Lv12State
-        //{
-        //    get => (int)_levelActivate.Cells[0, 11] == 1;
-        //    set => _levelActivate.Cells[0, 11] = value ? 1 : 0;
-        //}
+        #endregion
 
+        #region Level Locked State
         public bool GetLockedOf(int level) => (int)_levelActivate.Cells[0, level - 1] == 1;
         public void SetLockedOf(int level, bool locked) => _levelActivate.Cells[0, level - 1] = locked ? 1 : 0;
+        #endregion
 
+        #region KBD Related
         private static readonly List<string> _keys = new() {"1","2","3","4","5","6","7","8","9","0","-","=","BackSpace","Tab","Q","W","E","R","T","Y","U","I","O","P",
         "[","]","Ctrl","A","S","D","F","G","H","J","K","L",";","'","`","Shift","\\","Z","X","C","V","B","N","M",",",".","/",
         "Right Shift","Alt","Space","Num 7","Num 8","Num 9","Num -","Num 4","Num 5","Num 6","Num +","Num 1","Num 2","Num 3","Num 0","Num Del","<","Up","Down","Left","Right"};
@@ -135,7 +82,9 @@ namespace BallanceLauncher.Model
         public string KeyRight => _keys[(int)_options.Cells[5, 0]];
         public string KeyRotateCam => _keys[(int)_options.Cells[6, 0]];
         public string KeyLiftCam => _keys[(int)_options.Cells[7, 0]];
+        #endregion
 
+        #region Game Settings
         public int Volume
         {
             get => (int)((float)_options.Cells[0, 0] * 100);
@@ -161,6 +110,6 @@ namespace BallanceLauncher.Model
             get => (string)_options.Cells[9, 0];
             //set => _options.Cells[0, 9] = value;
         }
-
+        #endregion
     }
 }

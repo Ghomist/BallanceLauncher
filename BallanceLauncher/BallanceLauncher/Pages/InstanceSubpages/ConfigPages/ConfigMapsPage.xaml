@@ -44,7 +44,7 @@
                         Checked="CheckBox_Checked"
                         IsChecked="{x:Bind Enable}"
                         Unchecked="CheckBox_Unchecked" />-->
-                    <SymbolIcon Grid.Column="0" Symbol="{x:Bind GetSymbol()}" />
+                    <SymbolIcon Grid.Column="0" Symbol="{x:Bind TypeSymbol}" />
                     <TextBlock
                         Grid.Column="1"
                         Margin="12,0,0,0"
@@ -55,7 +55,7 @@
                         Margin="12,0"
                         Foreground="Gray"
                         Text="{x:Bind Size}" />
-                    <TextBlock Grid.Column="4" Text="{x:Bind GetTypeString()}" />
+                    <TextBlock Grid.Column="4" Text="{x:Bind Type}" />
                 </Grid>
             </ListViewItem>
         </DataTemplate>

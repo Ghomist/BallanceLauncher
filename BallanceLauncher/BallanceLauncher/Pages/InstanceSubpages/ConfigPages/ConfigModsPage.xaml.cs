@@ -39,9 +39,8 @@ namespace BallanceLauncher.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             _instance = e.Parameter as BallanceInstance;
-            FreshModList();
-
             base.OnNavigatedTo(e);
+            FreshModList();
         }
 
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
@@ -118,18 +117,31 @@ namespace BallanceLauncher.Pages
             }
         }
 
-        private async void FreshModList()
+        private void FreshModList()
         {
             LoadingTip.Visibility = Visibility.Visible;
             ModList.Visibility = Visibility.Collapsed;
             //Commands.Visibility = Visibility.Collapsed;
 
-            _mods = await _instance.GetModsAsync();
-            ModList.ItemsSource = _mods;
+            Task.Run(async () =>
+            {
+                _mods = await _instance.GetModsAsync().ConfigureAwait(false);
+                var tasks = new List<Task>();
+                foreach (var mod in _mods)
+                {
+                    tasks.Add(mod.TryUpdateInfoAsync());
+                }
+                Task.WaitAll(tasks.ToArray());
 
-            LoadingTip.Visibility = Visibility.Collapsed;
-            ModList.Visibility = Visibility.Visible;
-            Commands.Visibility = Visibility.Visible;
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    ModList.ItemsSource = _mods;
+                    LoadingTip.Visibility = Visibility.Collapsed;
+                    ModList.Visibility = Visibility.Visible;
+                    Commands.Visibility = Visibility.Visible;
+                });
+
+            });
         }
 
         private async void More_Click(object sender, RoutedEventArgs e)
@@ -146,7 +158,7 @@ namespace BallanceLauncher.Pages
                 if (!_selectedItems.Contains(mod)) _selectedItems.Add(mod);
             foreach (BallanceMod mod in e.RemovedItems)
                 if (_selectedItems.Contains(mod))
-                    _selectedItems.Remove(_selectedItems.FirstOrDefault((o) => o.Hash == mod.Hash));
+                    _selectedItems.Remove(_selectedItems.FirstOrDefault(o => o.Equals(mod)));
             More.IsEnabled = _selectedItems.Count == 1;
             Delete.IsEnabled = _selectedItems.Count > 0;
         }

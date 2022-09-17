@@ -32,7 +32,6 @@
                 Name="{x:Bind DisplayName}"
                 DoubleTapped="More_Click"
                 IsDoubleTapEnabled="True"
-                IsSelected="{x:Bind IsSelected, Mode=TwoWay}"
                 ToolTipService.ToolTip="{x:Bind Details}">
                 <Grid>
                     <!--  Row Style  -->

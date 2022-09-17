@@ -37,13 +37,14 @@ namespace BallanceLauncher.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            _instance = e.Parameter as BallanceInstance;
             base.OnNavigatedTo(e);
+            _instance = e.Parameter as BallanceInstance;
+            FreshRecords();
         }
 
-        private Task FreshRecords()
+        private void FreshRecords()
         {
-            return Task.Run(async () =>
+            Task.Run(async () =>
             {
                 _database = await TdbHelper.ReadDatabaseAsync(_instance.Database).ConfigureAwait(false);
 
@@ -73,7 +74,7 @@ namespace BallanceLauncher.Pages
                 var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "清除纪录");
                 _database.ClearRecordsOf(level);
                 await TdbHelper.WriteDatabaseAsync(_database, _instance.Database);
-                await FreshRecords();
+                FreshRecords();
                 DialogHelper.FinishProcessingDialog(dlg, "搞定！");
             }
         }
@@ -87,14 +88,9 @@ namespace BallanceLauncher.Pages
                 var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "清除纪录");
                 _database.ClearAllRecords();
                 await TdbHelper.WriteDatabaseAsync(_database, _instance.Database);
-                await FreshRecords();
+                FreshRecords();
                 DialogHelper.FinishProcessingDialog(dlg, "搞定！");
             }
-        }
-
-        private async void Records_Loaded(object sender, RoutedEventArgs e)
-        {
-            await FreshRecords();
         }
     }
 

@@ -49,10 +49,10 @@ namespace BallanceLauncher.Pages
             App.MainWindow.UpdateTitleBar((sender as ToggleSwitch).IsOn);
         }
 
-        private void ClearTemp_Click(object sender, RoutedEventArgs e)
+        private async void ClearTemp_Click(object sender, RoutedEventArgs e)
         {
             var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "删除下载缓存");
-            FileHelper.DeleteTemporaryFilesAsync();
+            await FileHelper.DeleteTemporaryFilesAsync();
             DialogHelper.FinishProcessingDialog(dlg, "完成！");
         }
 

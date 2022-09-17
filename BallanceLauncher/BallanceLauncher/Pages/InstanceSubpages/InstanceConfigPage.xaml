@@ -5,8 +5,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:BallanceLauncher.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:utils="using:BallanceLauncher.Utils"
     mc:Ignorable="d">
     <Page.Resources>
+        <utils:BoolToVisibilityConverter x:Key="BoolToVisibility" />
         <Style x:Key="ListStyle" TargetType="ListView">
             <Setter Property="Height" Value="350" />
         </Style>
@@ -67,13 +69,13 @@
                         <TextBlock Margin="12,0,0,0" Text="按键设置" />
                     </StackPanel>
                 </ListViewItem>-->
-                <ListViewItem Visibility="{x:Bind _instance.ModPropVisibility}">
+                <ListViewItem Visibility="{x:Bind _instance.HasBMLInstalled, Converter={StaticResource BoolToVisibility}}">
                     <StackPanel Orientation="Horizontal" Tag="Mods">
                         <SymbolIcon Symbol="Library" />
                         <TextBlock Margin="12,0,0,0" Text="Mods" />
                     </StackPanel>
                 </ListViewItem>
-                <ListViewItem Visibility="{x:Bind _instance.MapPropVisibility}">
+                <ListViewItem Visibility="{x:Bind _instance.HasBMLInstalled, Converter={StaticResource BoolToVisibility}}">
                     <StackPanel Orientation="Horizontal" Tag="Maps">
                         <SymbolIcon Symbol="OutlineStar" />
                         <TextBlock Margin="12,0,0,0" Text="自定义地图" />

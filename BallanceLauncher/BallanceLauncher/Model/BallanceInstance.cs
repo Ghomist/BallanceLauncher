@@ -15,6 +15,7 @@ namespace BallanceLauncher.Model
 {
     public class BallanceInstance
     {
+        #region Basic Properties
         private string _name;
         public string Name
         {
@@ -25,7 +26,6 @@ namespace BallanceLauncher.Model
                 _name = value;
             }
         }
-
         private string _path;
         public string Path
         {
@@ -38,28 +38,26 @@ namespace BallanceLauncher.Model
                 _path = value;
             }
         }
+        public bool Exists => Directory.Exists(Path) && File.Exists(Executable);
+        public bool HasBMLInstalled => File.Exists(Path + @"BuildingBlocks\BML.dll") && Directory.Exists(Path + @"ModLoader\");
+        #endregion
 
-        // paths
+        #region Paths
         public string WorkingDir => Path + @"bin\";
         public string Executable => WorkingDir + @"player.exe";
         public string BMLDir => HasBMLInstalled ? Path + @"ModLoader\" : "没有找到 BML";
         public string ModDir => HasBMLInstalled ? BMLDir + @"Mods\" : "没有安装 BML";
         public string MapDir => HasBMLInstalled ? BMLDir + @"Maps\" : "没有安装 BML";
         public string Database => Path + @"Database.tdb";
-
-        public bool Exists => Directory.Exists(Path) && File.Exists(Executable);
-        public bool HasBMLInstalled => File.Exists(Path + @"BuildingBlocks\BML.dll") && Directory.Exists(Path + @"ModLoader\");
-
-        public Visibility ModPropVisibility => HasBMLInstalled ? Visibility.Visible : Visibility.Collapsed;
-        public Visibility MapPropVisibility => HasBMLInstalled ? Visibility.Visible : Visibility.Collapsed;
-
-        //public bool IsDefault { get; set; }
+        #endregion
 
         public BallanceInstance() { }
         public BallanceInstance(string name, string path) => (Name, Path) = (name, path);
 
         //[OnDeserialized]
         //internal void OnDeserializedMethod(StreamingContext context) { }
+
+        #region Get Maps or Mods
 
         public Task<List<BallanceMod>> GetModsAsync()
         {
@@ -147,6 +145,8 @@ namespace BallanceLauncher.Model
                 return maps;
             });
         }
+
+        #endregion
 
         public Task InstallBMLAsync() => FileHelper.ExtractBMLAsync(this);
 

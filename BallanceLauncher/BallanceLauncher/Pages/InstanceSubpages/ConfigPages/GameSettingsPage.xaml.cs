@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 
@@ -35,6 +36,8 @@ namespace BallanceLauncher.Pages
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            base.OnNavigatedTo(e);
+
             _instance = e.Parameter as BallanceInstance;
             _database = await TdbHelper.ReadDatabaseAsync(_instance.Database);
 
@@ -67,8 +70,6 @@ namespace BallanceLauncher.Pages
 
             SaveIngameSettings.IsEnabled = false;
             SaveIngameSettings2.IsEnabled = false;
-
-            base.OnNavigatedTo(e);
         }
 
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)

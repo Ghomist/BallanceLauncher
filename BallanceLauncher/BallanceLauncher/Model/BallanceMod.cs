@@ -17,12 +17,11 @@ namespace BallanceLauncher.Model
 {
     public class BallanceMod
     {
-        public string DisplayName { get; private set; }
+        public readonly string DisplayName;
         public string FullName { get; private set; }
         public BallanceModType Type { get; private set; }
         public bool Enable { get; private set; }
         public bool Exists { get; private set; }
-        public bool IsSelected { get; set; } // selected in mod list
 
         public string Hash { get; private set; }
 
@@ -56,10 +55,7 @@ namespace BallanceLauncher.Model
             Type = type;
             FullName = fullName;
             Exists = true;
-            IsSelected = false;
             Hash = null;
-
-            Task.Run(TryUpdateInfoAsync);
         }
 
         public async Task TryUpdateInfoAsync()
