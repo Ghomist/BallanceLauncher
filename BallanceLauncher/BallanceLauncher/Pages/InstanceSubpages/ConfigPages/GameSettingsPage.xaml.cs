@@ -29,6 +29,25 @@ namespace BallanceLauncher.Pages
         private BallanceInstance _instance;
         private BallanceDatabase _database;
 
+        #region Props
+        private int Volume { get => _database != null ? _database.Volume : 0; set => _database.Volume = value; }
+        private bool CloudLayer { get => _database != null && _database.CloudLayer; set => _database.CloudLayer = value; }
+        private bool SynchToScreen { get => _database != null && _database.SynchToScreen; set => _database.SynchToScreen = value; }
+        private bool InvertCamRotation { get => _database != null && _database.InvertCamRotation; set => _database.InvertCamRotation = value; }
+        private bool Lv1Locked { get => _database != null && _database.GetLevelLocked(1); set => _database.SetLevelLocked(1, value); }
+        private bool Lv2Locked { get => _database != null && _database.GetLevelLocked(2); set => _database.SetLevelLocked(2, value); }
+        private bool Lv3Locked { get => _database != null && _database.GetLevelLocked(3); set => _database.SetLevelLocked(3, value); }
+        private bool Lv4Locked { get => _database != null && _database.GetLevelLocked(4); set => _database.SetLevelLocked(4, value); }
+        private bool Lv5Locked { get => _database != null && _database.GetLevelLocked(5); set => _database.SetLevelLocked(5, value); }
+        private bool Lv6Locked { get => _database != null && _database.GetLevelLocked(6); set => _database.SetLevelLocked(6, value); }
+        private bool Lv7Locked { get => _database != null && _database.GetLevelLocked(7); set => _database.SetLevelLocked(7, value); }
+        private bool Lv8Locked { get => _database != null && _database.GetLevelLocked(8); set => _database.SetLevelLocked(8, value); }
+        private bool Lv9Locked { get => _database != null && _database.GetLevelLocked(9); set => _database.SetLevelLocked(9, value); }
+        private bool Lv10Locked { get => _database != null && _database.GetLevelLocked(10); set => _database.SetLevelLocked(10, value); }
+        private bool Lv11Locked { get => _database != null && _database.GetLevelLocked(11); set => _database.SetLevelLocked(11, value); }
+        private bool Lv12Locked { get => _database != null && _database.GetLevelLocked(12); set => _database.SetLevelLocked(12, value); }
+        #endregion
+
         public GameSettingsPage()
         {
             this.InitializeComponent();
@@ -36,76 +55,32 @@ namespace BallanceLauncher.Pages
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
-
             _instance = e.Parameter as BallanceInstance;
             _database = await TdbHelper.ReadDatabaseAsync(_instance.Database);
+            base.OnNavigatedTo(e);
+            Bindings.Update();
+        }
 
-            Volume.Value = _database.Volume;
-            CloudLayer.IsOn = _database.CloudLayer;
-            SynchToScreen.IsOn = _database.SynchToScreen;
-            InvertCamRotation.IsOn = _database.InvertCamRotation;
-
-            for (int i = 1; i <= 12; ++i)
-            {
-                var text = new TextBlock
-                {
-                    Style = Resources["PropKey"] as Style,
-                    Text = $"Level_{i:d02}"
-                };
-                LevelStatus.Children.Add(text);
-                Grid.SetRow(text, i);
-
-                var toggle = new ToggleSwitch
-                {
-                    IsOn = _database.GetLockedOf(i),
-                    Tag = $"Level_{i:d02}",
-                };
-                toggle.Toggled += ToggleSwitch_Toggled;
-                //Binding binding = new Binding() { Path = new("_database.") };
-                LevelStatus.Children.Add(toggle);
-                Grid.SetRow(toggle, i);
-                Grid.SetColumn(toggle, 1);
-            }
-
-            SaveIngameSettings.IsEnabled = false;
-            SaveIngameSettings2.IsEnabled = false;
+        private void SetSaveButtonEnable(bool enable)
+        {
+            SaveIngameSettings.IsEnabled = enable;
+            SaveIngameSettings2.IsEnabled = enable;
         }
 
         private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            var toggle = sender as ToggleSwitch;
-            if (toggle == null) return;
-            var tag = toggle.Tag;
-            if (tag != null)
-            {
-                var tagString = tag.ToString();
-                if (tagString.StartsWith("Level_"))
-                {
-                    int level = int.Parse(tagString[^2..]);
-                    _database.SetLockedOf(level, toggle.IsOn);
-                }
-            }
-            SaveIngameSettings.IsEnabled = true;
-            SaveIngameSettings2.IsEnabled = true;
-            //Bindings.Update(); // TODOs
+            SetSaveButtonEnable(true);
         }
 
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            SaveIngameSettings.IsEnabled = true;
-            SaveIngameSettings2.IsEnabled = true;
+            SetSaveButtonEnable(true);
         }
 
         private async void SaveIngameSettings_Click(object sender, RoutedEventArgs e)
         {
             var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "写入设置");
-            SaveIngameSettings.IsEnabled = false;
-            SaveIngameSettings2.IsEnabled = false;
-            _database.Volume = (int)Volume.Value;
-            _database.CloudLayer = CloudLayer.IsOn;
-            _database.SynchToScreen = SynchToScreen.IsOn;
-            _database.InvertCamRotation = InvertCamRotation.IsOn;
+            SetSaveButtonEnable(false);
             await TdbHelper.WriteDatabaseAsync(_database, _instance.Database);
             DialogHelper.FinishProcessingDialog(dlg, "搞定！");
         }

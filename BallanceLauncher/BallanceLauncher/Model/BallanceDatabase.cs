@@ -67,8 +67,8 @@ namespace BallanceLauncher.Model
         #endregion
 
         #region Level Locked State
-        public bool GetLockedOf(int level) => (int)_levelActivate.Cells[0, level - 1] == 1;
-        public void SetLockedOf(int level, bool locked) => _levelActivate.Cells[0, level - 1] = locked ? 1 : 0;
+        public bool GetLevelLocked(int level) => (int)_levelActivate.Cells[0, level - 1] == 1;
+        public void SetLevelLocked(int level, bool locked) => _levelActivate.Cells[0, level - 1] = locked ? 1 : 0;
         #endregion
 
         #region KBD Related
@@ -108,6 +108,7 @@ namespace BallanceLauncher.Model
         public string LastPlayer
         {
             get => (string)_options.Cells[9, 0];
+            set { }
             //set => _options.Cells[0, 9] = value;
         }
         #endregion

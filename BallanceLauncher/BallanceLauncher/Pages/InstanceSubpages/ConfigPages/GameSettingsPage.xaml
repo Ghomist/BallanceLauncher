@@ -41,7 +41,7 @@
 
     <Grid>
         <ScrollViewer>
-            <StackPanel>
+            <StackPanel Margin="0,0,16,0">
 
                 <TextBlock Style="{StaticResource PropCategory}" Text="游戏内设置" />
 
@@ -52,6 +52,7 @@
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
@@ -77,9 +78,9 @@
                         Style="{StaticResource PropKey}"
                         Text="垂直同步" />
                     <ToggleSwitch
-                        Name="SynchToScreen"
                         Grid.Row="1"
                         Grid.Column="1"
+                        IsOn="{x:Bind SynchToScreen, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -87,9 +88,9 @@
                         Style="{StaticResource PropKey}"
                         Text="反转相机旋转" />
                     <ToggleSwitch
-                        Name="InvertCamRotation"
                         Grid.Row="2"
                         Grid.Column="1"
+                        IsOn="{x:Bind InvertCamRotation, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -97,23 +98,22 @@
                         Style="{StaticResource PropKey}"
                         Text="开启云层" />
                     <ToggleSwitch
-                        Name="CloudLayer"
                         Grid.Row="3"
                         Grid.Column="1"
-                        Toggled="ToggleSwitch_Toggled" />
+                        IsOn="{x:Bind CloudLayer, Mode=TwoWay}" />
 
                     <TextBlock
                         Grid.Row="4"
                         Style="{StaticResource PropKey}"
                         Text="游戏内音量" />
                     <Slider
-                        Name="Volume"
                         Grid.Row="4"
                         Grid.Column="1"
                         Maximum="100"
                         Minimum="0"
                         StepFrequency="1"
-                        ValueChanged="Slider_ValueChanged" />
+                        ValueChanged="Slider_ValueChanged"
+                        Value="{x:Bind Volume, Mode=TwoWay}" />
 
                 </Grid>
 
@@ -154,14 +154,14 @@
                         Content="保存"
                         IsEnabled="False" />
 
-                    <!--<TextBlock
+                    <TextBlock
                         Grid.Row="1"
                         Style="{StaticResource PropKey}"
                         Text="Level_01" />
                     <ToggleSwitch
                         Grid.Row="1"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv1State, Mode=TwoWay}"
+                        IsOn="{x:Bind Lv1Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -171,7 +171,7 @@
                     <ToggleSwitch
                         Grid.Row="2"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv2State, Mode=TwoWay}"
+                        IsOn="{x:Bind Lv2Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -181,7 +181,7 @@
                     <ToggleSwitch
                         Grid.Row="4"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv4State, Mode=TwoWay}"
+                        IsOn="{x:Bind Lv4Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -191,7 +191,7 @@
                     <ToggleSwitch
                         Grid.Row="5"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv5State, Mode=TwoWay}"
+                        IsOn="{x:Bind Lv5Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -201,7 +201,7 @@
                     <ToggleSwitch
                         Grid.Row="6"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv6State, Mode=TwoWay}"
+                        IsOn="{x:Bind Lv6Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -211,7 +211,7 @@
                     <ToggleSwitch
                         Grid.Row="7"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv7State, Mode=TwoWay}"
+                        IsOn="{x:Bind Lv7Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -221,7 +221,7 @@
                     <ToggleSwitch
                         Grid.Row="8"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv8State, Mode=TwoWay}"
+                        IsOn="{x:Bind Lv8Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -231,7 +231,7 @@
                     <ToggleSwitch
                         Grid.Row="9"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv9State, Mode=TwoWay}"
+                        IsOn="{x:Bind Lv9Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -241,7 +241,7 @@
                     <ToggleSwitch
                         Grid.Row="10"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv10State, Mode=TwoWay}"
+                        IsOn="{x:Bind Lv10Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -251,7 +251,7 @@
                     <ToggleSwitch
                         Grid.Row="11"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv11State, Mode=TwoWay}"
+                        IsOn="{x:Bind Lv11Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -261,8 +261,8 @@
                     <ToggleSwitch
                         Grid.Row="12"
                         Grid.Column="1"
-                        IsOn="{x:Bind _database.Lv12State, Mode=TwoWay}"
-                        Toggled="ToggleSwitch_Toggled" />-->
+                        IsOn="{x:Bind Lv12Locked, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
 
                 </Grid>
 

@@ -196,7 +196,7 @@ namespace BallanceLauncher.Utils
                     }
                     return true;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //DialogHelper.ShowErrorMessageAsync(App.Window.Content.XamlRoot,
                     //    "哇啊我不知道怎么就下载失败了！要不你自己试一试呢？");
