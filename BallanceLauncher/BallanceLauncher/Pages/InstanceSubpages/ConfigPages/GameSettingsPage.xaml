@@ -25,6 +25,7 @@
             <Setter Property="CornerRadius" Value="4" />
             <Setter Property="Background" Value="#88FFFFFF" />
             <Setter Property="Padding" Value="25,10" />
+            <Setter Property="Margin" Value="0,0,0,8" />
             <Setter Property="ColumnSpacing" Value="50" />
         </Style>
         <!--<TeachingTip
@@ -119,7 +120,7 @@
 
                 <TextBlock Style="{StaticResource PropCategory}" Text="原版关卡解锁" />
 
-                <Grid x:Name="LevelStatus" Style="{StaticResource PropGrid}">
+                <Grid Style="{StaticResource PropGrid}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="*" />
@@ -172,6 +173,16 @@
                         Grid.Row="2"
                         Grid.Column="1"
                         IsOn="{x:Bind Lv2Locked, Mode=TwoWay}"
+                        Toggled="ToggleSwitch_Toggled" />
+
+                    <TextBlock
+                        Grid.Row="3"
+                        Style="{StaticResource PropKey}"
+                        Text="Level_03" />
+                    <ToggleSwitch
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        IsOn="{x:Bind Lv3Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
 
                     <TextBlock
@@ -263,6 +274,86 @@
                         Grid.Column="1"
                         IsOn="{x:Bind Lv12Locked, Mode=TwoWay}"
                         Toggled="ToggleSwitch_Toggled" />
+
+                </Grid>
+
+                <TextBlock Style="{StaticResource PropCategory}" Text="游戏内按键（只读）" />
+
+                <Grid Style="{StaticResource PropGrid}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Grid.Column="2" />
+
+                    <TextBlock
+                        Grid.Row="0"
+                        Style="{StaticResource PropKey}"
+                        Text="前进" />
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        IsReadOnly="True"
+                        Text="{x:Bind KeyForward, Mode=OneWay}" />
+
+                    <TextBlock
+                        Grid.Row="1"
+                        Style="{StaticResource PropKey}"
+                        Text="后退" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        IsReadOnly="True"
+                        Text="{x:Bind KeyBackward, Mode=OneWay}" />
+
+                    <TextBlock
+                        Grid.Row="2"
+                        Style="{StaticResource PropKey}"
+                        Text="向左" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        IsReadOnly="True"
+                        Text="{x:Bind KeyLeft, Mode=OneWay}" />
+
+                    <TextBlock
+                        Grid.Row="3"
+                        Style="{StaticResource PropKey}"
+                        Text="向右" />
+                    <TextBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        IsReadOnly="True"
+                        Text="{x:Bind KeyRight, Mode=OneWay}" />
+
+                    <TextBlock
+                        Grid.Row="4"
+                        Style="{StaticResource PropKey}"
+                        Text="旋转视角" />
+                    <TextBox
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        IsReadOnly="True"
+                        Text="{x:Bind KeyRotateCam, Mode=OneWay}" />
+
+                    <TextBlock
+                        Grid.Row="5"
+                        Style="{StaticResource PropKey}"
+                        Text="抬升视角" />
+                    <TextBox
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        IsReadOnly="True"
+                        Text="{x:Bind KeyLiftCam, Mode=OneWay}" />
 
                 </Grid>
 

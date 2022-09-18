@@ -46,6 +46,12 @@ namespace BallanceLauncher.Pages
         private bool Lv10Locked { get => _database != null && _database.GetLevelLocked(10); set => _database.SetLevelLocked(10, value); }
         private bool Lv11Locked { get => _database != null && _database.GetLevelLocked(11); set => _database.SetLevelLocked(11, value); }
         private bool Lv12Locked { get => _database != null && _database.GetLevelLocked(12); set => _database.SetLevelLocked(12, value); }
+        private string KeyForward { get => _database != null ? _database.KeyForward : ""; set { } }
+        private string KeyBackward { get => _database != null ? _database.KeyBackward : ""; set { } }
+        private string KeyLeft { get => _database != null ? _database.KeyLeft : ""; set { } }
+        private string KeyRight { get => _database != null ? _database.KeyRight : ""; set { } }
+        private string KeyLiftCam { get => _database != null ? _database.KeyLiftCam : ""; set { } }
+        private string KeyRotateCam { get => _database != null ? _database.KeyRotateCam : ""; set { } }
         #endregion
 
         public GameSettingsPage()
@@ -55,9 +61,10 @@ namespace BallanceLauncher.Pages
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            base.OnNavigatedTo(e);
             _instance = e.Parameter as BallanceInstance;
             _database = await TdbHelper.ReadDatabaseAsync(_instance.Database);
-            base.OnNavigatedTo(e);
+            SetSaveButtonEnable(false);
             Bindings.Update();
         }
 
