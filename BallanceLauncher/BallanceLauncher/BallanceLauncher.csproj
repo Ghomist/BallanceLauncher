@@ -34,6 +34,7 @@
     <None Remove="Ballance\Ballance.zip" />
     <None Remove="Ballance\BML-0.3.40.zip" />
     <None Remove="BlankPage1.xaml" />
+    <None Remove="obs_config.json" />
     <None Remove="Pages\AboutPage.xaml" />
     <None Remove="Pages\BasicConfigPage.xaml" />
     <None Remove="Pages\ConfigMapsPage.xaml" />
@@ -62,6 +63,7 @@
     <EmbeddedResource Include="BallanceModInfoReader\BML.dll" />
     <EmbeddedResource Include="Ballance\Ballance.zip" />
     <EmbeddedResource Include="Ballance\BML-0.3.40.zip" />
+    <EmbeddedResource Include="obs_config.json" />
   </ItemGroup>
 
   <ItemGroup>

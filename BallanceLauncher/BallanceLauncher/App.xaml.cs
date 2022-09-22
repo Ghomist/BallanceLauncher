@@ -60,7 +60,7 @@ namespace BallanceLauncher
         public App()
         {
             // avoid 're-open'
-            if (ProcessHelper.HasFormerProcess())
+            if (ProcessHelper.IsAppRunning())
             {
                 Environment.Exit(1);
             }
@@ -80,6 +80,7 @@ namespace BallanceLauncher
             {
                 var jsonText = FileHelper.ReadLocalFileAsync(s_instancesSavePath).GetAwaiter().GetResult();
                 Instances = JsonConvert.DeserializeObject<ObservableCollection<BallanceInstance>>(jsonText);
+
                 for (int i = Instances.Count - 1; i >= 0; --i)
                 {
                     if (!Instances[i].Exists)
@@ -118,7 +119,11 @@ namespace BallanceLauncher
                     await DialogHelper.ShowErrorMessageAsync(MainWindow.Content.XamlRoot, "已经有一个 Ballance 在运行啦！").ConfigureAwait(false);
                     return;
                 }
-                _runningInstance = ProcessHelper.RunProcess(instance.Executable, instance.WorkingDir, showindow: true);
+                //_runningInstance = ProcessHelper.RunProcess(instance.Executable, instance.WorkingDir, showindow: true);
+                var startTime = DateTime.UtcNow;
+                await ProcessHelper.RunAndWaitAsync(instance.Executable, instance.WorkingDir, showindow: true);
+                var endTime = DateTime.UtcNow;
+                instance.RunningTime += endTime - startTime;
             }
             catch (Exception ex)
             {

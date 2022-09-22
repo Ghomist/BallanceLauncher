@@ -38,6 +38,13 @@ namespace BallanceLauncher.Model
                 _path = value;
             }
         }
+        private TimeSpan _time;
+        public TimeSpan RunningTime
+        {
+            get => _time;
+            set => _time = value;
+        }
+        public string RunningTimeString => RunningTime.ToString();
         public bool Exists => Directory.Exists(Path) && File.Exists(Executable);
         public bool HasBMLInstalled => File.Exists(Path + @"BuildingBlocks\BML.dll") && Directory.Exists(Path + @"ModLoader\");
         #endregion
@@ -174,16 +181,6 @@ namespace BallanceLauncher.Model
 
         public string ToJson() => JsonConvert.SerializeObject(this, Formatting.Indented);
 
-        public static bool EnsureBallancePath(string path)
-        {
-            DirectoryInfo dir = new(path + @"\bin");
-            if (dir.Exists)
-            {
-                FileInfo[] files = dir.GetFiles("player.exe");
-                if (files.Length == 1)
-                    return true;
-            }
-            return false;
-        }
+        public static bool EnsureBallancePath(string path) => new BallanceInstance("__Test__", path).Exists;
     }
 }

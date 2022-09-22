@@ -60,7 +60,7 @@ namespace BallanceLauncher.Pages
                 {
                     Records.ItemsSource = recordLists;
                 });
-            });
+            }).ConfigureAwait(false);
         }
 
         private async void ClearSingle_Click(object sender, RoutedEventArgs e)
