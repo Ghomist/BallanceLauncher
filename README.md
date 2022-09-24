@@ -8,12 +8,12 @@
 
 **注意**：MSIX 的安装需要包的数字签名得到认证，由于暂时缺少可信任的认证方式，将会需要用户手动安装证书文件，_即使是脚本安装同样如此_
 
-### MSIX (MSIXBUDDLE) 手动安装
+### MSIX (MSIXBUNDLE) 手动安装
 
-1. 右键 `MSIXBUDDLE` 文件，依次选择：属性、数字签名、签名列表中 ghomist 的签名、详细信息、查看证书，找到数字证书
+1. 下载 `.msixbundle` 文件，右键依次选择：属性、数字签名、签名列表中 ghomist 的签名、详细信息、查看证书，找到数字证书
     - 亦可直接下载数字证书 `.cer` 文件并打开，效果于上述操作相同
 2. 选择安装证书，自行选择储存位置，随后选择“将所有的证书都放入下列储存”，点击浏览，选择证书目录“受信任人”，点击下一步并完成安装即可
-3. 下载并双击打开 `MSIXBUDDLE` 文件，按引导安装即可
+3. 双击打开 `msibundle` 文件，按引导安装即可
 
 ### 脚本安装
 
@@ -77,7 +77,7 @@ NuGet
 -   [Newtonsoft.Json](https://www.newtonsoft.com/json) 13.0.1
 -   [WpfCore.FolderPicker](https://github.com/dove-team/WpfCore.FolderPicker) 1.0.0
 -   [Swung0x48.Ballance.TdbReader](https://www.nuget.org/packages/Swung0x48.Ballance.TdbReader/1.1.0) 1.1.0
--   [System.Data.HashFunction.CRC](https://www.nuget.org/packages/System.Data.HashFunction.CRC/2.0.0?_src=template) 2.0.0
+-   [System.Data.HashFunction.CRC](https://www.nuget.org/packages/System.Data.HashFunction.CRC/2.0.0) 2.0.0
 
 其它依赖
 
