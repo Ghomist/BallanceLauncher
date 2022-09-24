@@ -10,6 +10,9 @@ using System.Reflection;
 using BallanceLauncher.Model;
 using Windows.Storage;
 using Newtonsoft.Json;
+using Windows.Foundation;
+using System.Collections.Immutable;
+using System.Data.HashFunction.CRC;
 
 namespace BallanceLauncher.Utils
 {
@@ -19,35 +22,6 @@ namespace BallanceLauncher.Utils
         public static StorageFolder TemporaryFolder => ApplicationData.Current.TemporaryFolder;
 
         private static readonly SHA256 s_sha256Encrypter = SHA256.Create();
-
-        public static Task ExtractBallance(string pathName) =>
-            Task.Run(async () =>
-            {
-                // create folder
-                //if (!pathName.EndsWith('\\') && !pathName.EndsWith('/')) pathName += '\\';
-                var targetDir = new DirectoryInfo(pathName);
-                if (!targetDir.Exists) targetDir.Create();
-                // release Ballance.zip
-                var zipFile = new FileInfo(targetDir.FullName + "\\Ballance.zip");
-                await ExtractResourceAsync("Ballance", "Ballance.zip", zipFile.FullName).ConfigureAwait(false);
-                // extract
-                ZipFile.ExtractToDirectory(zipFile.FullName, pathName, Encoding.UTF8, true);
-                // delete zip
-                zipFile.Delete();
-            });
-
-        public static Task ExtractBMLAsync(BallanceInstance instance) =>
-            Task.Run(async () =>
-            {
-                var targetDir = new DirectoryInfo(instance.Path);
-                // release BML-0.3.40.zip
-                var zipFile = new FileInfo(targetDir.FullName + "\\BML.zip");
-                await ExtractResourceAsync("Ballance", "BML-0.3.40.zip", zipFile.FullName).ConfigureAwait(false);
-                // extract
-                ZipFile.ExtractToDirectory(zipFile.FullName, targetDir.FullName, Encoding.UTF8, true);
-                // delete zip
-                zipFile.Delete();
-            });
 
         public static Task<string> ExtractModAsync(string fullName, string displayName) =>
             Task.Run(async () =>
@@ -81,28 +55,33 @@ namespace BallanceLauncher.Utils
                 }
             });
 
+        #region Local File
+        public static Task<StorageFile> GetLocalFileAsync(string fileName)
+        {
+            return Task.Run(async () =>
+            {
+                StorageFile f = null;
+                try
+                {
+                    f = await LocalFolder.GetFileAsync(fileName);
+                }
+                catch (FileNotFoundException) { }
+                return f;
+            });
+        }
+
+        public static IAsyncOperation<StorageFile> CreateLocalFileAsync(string fileName) =>
+            LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+
+        public static IAsyncOperation<StorageFile> OpenLocalFileAsync(string fileName) =>
+            LocalFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+
         public static Task<string> ReadLocalFileAsync(string fileName)
         {
             return Task.Run(async () =>
             {
-                var f = await LocalFolder.GetFileAsync(fileName);
-                return await FileIO.ReadTextAsync(f);
-            });
-        }
-
-        public static Task<DateTime> GetConfigModifiedTimeAsync(string fileName)
-        {
-            return Task.Run(async () =>
-            {
-                try
-                {
-                    var f = await LocalFolder.GetFileAsync(fileName);
-                    return File.GetLastWriteTimeUtc(f.Path);
-                }
-                catch (FileNotFoundException)
-                {
-                    return DateTime.MinValue;
-                }
+                var d = await GetLocalFileAsync(fileName);
+                return d == null ? "" : await FileIO.ReadTextAsync(d);
             });
         }
 
@@ -114,7 +93,52 @@ namespace BallanceLauncher.Utils
                 await FileIO.WriteTextAsync(configFile, content);
             });
         }
+        #endregion
 
+        #region Temporary File
+        public static Task<StorageFile> GetTempFileAsync(string fileName)
+        {
+            return Task.Run(async () =>
+            {
+                StorageFile f = null;
+                try
+                {
+                    f = await TemporaryFolder.GetFileAsync(fileName);
+                }
+                catch (FileNotFoundException) { }
+                return f;
+            });
+        }
+
+        public static IAsyncOperation<StorageFile> CreateTempFileAsync(string fileName) =>
+            TemporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+
+        public static IAsyncOperation<StorageFile> OpenTempFileAsync(string fileName) =>
+            TemporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
+
+        public static Task<string> ReadTempFileAsync(string fileName)
+        {
+            return Task.Run(async () =>
+            {
+                var d = await GetTempFileAsync(fileName);
+                return d == null ? "" : await FileIO.ReadTextAsync(d);
+            });
+        }
+
+        public static Task WriteTempFileAsync(string fileName, string content)
+        {
+            return Task.Run(async () =>
+            {
+                var configFile = await TemporaryFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
+                await FileIO.WriteTextAsync(configFile, content);
+            });
+        }
+
+        public static Task DeleteTemporaryFilesAsync() =>
+            Task.Run(async () => await TemporaryFolder.DeleteAsync(StorageDeleteOption.PermanentDelete));
+        #endregion
+
+        #region Hash
         public static string GetRealHash(string fullName)
         {
             using var fs = new FileStream(fullName, FileMode.Open, FileAccess.Read);
@@ -129,7 +153,27 @@ namespace BallanceLauncher.Utils
             return BitConverter.ToString(hashBytes).Replace("-", "");
         }
 
-        public static Task DeleteTemporaryFilesAsync() =>
-            Task.Run(async () => await TemporaryFolder.DeleteAsync(StorageDeleteOption.PermanentDelete));
+        public static Task<ulong> GetCRC64Async(string fullName)
+        {
+            return Task.Run(async () =>
+            {
+                using var fs = new FileStream(fullName, FileMode.Open, FileAccess.Read);
+
+                var crcConfig = CRCConfig.CRC64_XZ; // fit to Tencent COS
+                var factory = CRCFactory.Instance.Create(crcConfig);
+                var value = await factory.ComputeHashAsync(fs);
+                return BitConverter.ToUInt64(value.Hash);
+            });
+        }
+        #endregion
+
+        public static Task<DateTime> GetConfigModifiedTimeAsync(string fileName)
+        {
+            return Task.Run(async () =>
+            {
+                var f = await GetLocalFileAsync(fileName);
+                return f == null ? DateTime.MinValue : File.GetLastWriteTimeUtc(f.Path);
+            });
+        }
     }
 }

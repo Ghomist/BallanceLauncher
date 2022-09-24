@@ -365,3 +365,4 @@ FodyWeavers.xsd
 Ballance/
 BallanceModInfoReader/
 help/
+/BallanceLauncher/BallanceLauncher/config.json

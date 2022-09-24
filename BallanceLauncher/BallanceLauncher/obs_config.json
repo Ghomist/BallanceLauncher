@@ -1,0 +1,9 @@
+{
+  "TencentCOS": {
+    "APPID": "1307489590",
+    "SecretId": "AKIDMWRCj13qNegSzGH2XmmW0ECuNaXEfrpX",
+    "SecretKey": "VkjSv85mDOK0QaVAZibFdldFbhX8TWJr",
+    "Region": "ap-nanjing",
+    "Bucket": "bcrc"
+  }
+}

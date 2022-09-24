@@ -45,7 +45,7 @@ namespace BallanceLauncher.Pages
         private async void InstallBML_Click(object sender, RoutedEventArgs e)
         {
             var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "安装 BML");
-            await _instance.InstallBMLAsync();
+            await _instance.InstallBMLAsync().ConfigureAwait(false);
             DialogHelper.FinishProcessingDialog(dlg, "安装完毕！");
             _parentPage.NavigateTo(_instance);
         }

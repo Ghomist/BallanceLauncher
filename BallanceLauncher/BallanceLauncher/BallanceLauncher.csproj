@@ -29,10 +29,7 @@
     <Compile Remove="AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="BallanceModInfoReader\BallanceModInfoReader.exe" />
-    <None Remove="BallanceModInfoReader\BML.dll" />
     <None Remove="Ballance\Ballance.zip" />
-    <None Remove="Ballance\BML-0.3.40.zip" />
     <None Remove="BlankPage1.xaml" />
     <None Remove="obs_config.json" />
     <None Remove="Pages\AboutPage.xaml" />
@@ -57,12 +54,6 @@
     <None Remove="Pages\TestPage.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="BallanceModInfoReader\BallanceModInfoReader.exe">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BallanceModInfoReader\BML.dll" />
-    <EmbeddedResource Include="Ballance\Ballance.zip" />
-    <EmbeddedResource Include="Ballance\BML-0.3.40.zip" />
     <EmbeddedResource Include="obs_config.json" />
   </ItemGroup>
 
@@ -74,7 +65,14 @@
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swung0x48.Ballance.TdbReader" Version="1.1.0" />
+    <PackageReference Include="System.Data.HashFunction.CRC" Version="2.0.0" />
     <PackageReference Include="WpfCore.FolderPicker" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="BallanceModInfoReader\BallanceModInfoReader.exe">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

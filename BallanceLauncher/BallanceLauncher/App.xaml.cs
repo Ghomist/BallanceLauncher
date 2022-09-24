@@ -41,16 +41,17 @@ namespace BallanceLauncher
     {
         public static ObservableCollection<BallanceInstance> Instances { get; private set; }
 
-        public static Microsoft.UI.Windowing.AppWindow AppWindow { get; private set; }
         public static MainWindow MainWindow { get; private set; }
+
+        public static Microsoft.UI.Windowing.AppWindow AppWindow { get; private set; }
         public static Windows.Graphics.SizeInt32 WindowSize
         {
             get => AppWindow.Size;
             set => AppWindow.Resize(value);
         }
 
-        public static string BaseDir => AppDomain.CurrentDomain.BaseDirectory;
-        public static string InfoReaderPath => FileHelper.LocalFolder.Path + "\\BallanceModInfoReader.exe";
+        public static readonly string BaseDir = AppDomain.CurrentDomain.BaseDirectory;
+        public static readonly string InfoReaderPath = FileHelper.LocalFolder.Path + "\\BallanceModInfoReader.exe";
 
         private static App _appInstance;
         private static Process _runningInstance;
@@ -65,15 +66,10 @@ namespace BallanceLauncher
                 Environment.Exit(1);
             }
 
-            //AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
-
-
             // extract resources
-            //if (!File.Exists(BaseDir + "BallanceModInfoReader.exe"))
-            //{
-            _ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BallanceModInfoReader.exe");
-            _ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BML.dll");
-            //}
+            //_ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BallanceModInfoReader.exe");
+            //_ = FileHelper.ExtractResourceAsync("BallanceModInfoReader", "BML.dll");
+            _ = ResourceDownloader.DownloadInfoReaderAsync();
 
             // read instances
             try
@@ -96,6 +92,12 @@ namespace BallanceLauncher
 
             // set some variable
             _appInstance = this;
+        }
+
+        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        {
+            (MainWindow, AppWindow) = StartWindow();
+            WindowSize = new(ConfigHelper.WindowWidth, ConfigHelper.WindowHeight);
         }
 
         public static void RestartWindow()
@@ -133,12 +135,6 @@ namespace BallanceLauncher
 
         public static Task SaveInstancesAsync() =>
             FileHelper.WriteLocalFileAsync(s_instancesSavePath, JsonConvert.SerializeObject(Instances));
-
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
-        {
-            (MainWindow, AppWindow) = StartWindow();
-            WindowSize = new(ConfigHelper.WindowWidth, ConfigHelper.WindowHeight);
-        }
 
         private static (MainWindow, Microsoft.UI.Windowing.AppWindow) StartWindow()
         {

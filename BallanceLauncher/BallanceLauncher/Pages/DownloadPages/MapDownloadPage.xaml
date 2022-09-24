@@ -114,6 +114,7 @@
                 SelectionMode="None">
                 <ListView.Background>
                     <AcrylicBrush
+                        FallbackColor="WhiteSmoke"
                         Opacity="1"
                         TintColor="White"
                         TintLuminosityOpacity="0.8"

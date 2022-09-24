@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BallanceLauncher.Model;
 using Swung0x48.Ballance.TdbReader;
+using System.Data.HashFunction.CRC;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace BallanceLauncher.Utils

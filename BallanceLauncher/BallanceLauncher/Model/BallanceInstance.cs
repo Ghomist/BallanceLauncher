@@ -65,7 +65,6 @@ namespace BallanceLauncher.Model
         //internal void OnDeserializedMethod(StreamingContext context) { }
 
         #region Get Maps or Mods
-
         public Task<List<BallanceMod>> GetModsAsync()
         {
             return Task.Run(() =>
@@ -152,10 +151,9 @@ namespace BallanceLauncher.Model
                 return maps;
             });
         }
-
         #endregion
 
-        public Task InstallBMLAsync() => FileHelper.ExtractBMLAsync(this);
+        public Task InstallBMLAsync() => ResourceDownloader.DownloadBMLAsync(this);
 
         public void UninstallBML(bool force = false)
         {

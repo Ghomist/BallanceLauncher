@@ -7,7 +7,7 @@
 ## 特性
 
 -   实例化管理
-    -   实例离线安装
+    -   实例在线安装
 -   Database.tdb 管理
     -   关卡解锁
     -   游戏内设置
@@ -61,6 +61,7 @@ NuGet
 -   [Newtonsoft.Json](https://www.newtonsoft.com/json) 13.0.1
 -   [WpfCore.FolderPicker](https://github.com/dove-team/WpfCore.FolderPicker) 1.0.0
 -   [Swung0x48.Ballance.TdbReader](https://www.nuget.org/packages/Swung0x48.Ballance.TdbReader/1.1.0) 1.1.0
+-   [System.Data.HashFunction.CRC](https://www.nuget.org/packages/System.Data.HashFunction.CRC/2.0.0?_src=template) 2.0.0
 
 其它依赖
 
@@ -79,7 +80,7 @@ git clone https://github.com/Ghomist/BallanceLauncher.git
 
 2. 使用 Visual Studio 2022 打开 `BallanceLauncher.sln`
 
-3. 设置需内嵌编译的二进制文件，并设置其编译属性
+<!-- 3. 设置需内嵌编译的二进制文件，并设置其编译属性
 
 以下路径均相对该源码根目录：[`./BallanceLauncher/BallanceLauncher/`](./BallanceLauncher/BallanceLauncher/)
 
@@ -88,10 +89,11 @@ git clone https://github.com/Ghomist/BallanceLauncher.git
 | `Ballance/Ballance.zip`                           | Embedded |                 |
 | `Ballance/BML-0.3.40.zip`                         | Embedded |                 |
 | `BallanceModInfoReader/BallanceModInfoReader.exe` | Embedded |                 |
-| `BallanceModInfoReader/BML.dll`                   | Embedded | 该 BML 为简化版 |
+| `BallanceModInfoReader/BML.dll`                   | Embedded | 该 BML 为简化版 | -->
 
-4. 选择 Release 64x 配置文件
-5. 构建解决方案并部署
+3. 选择 Release 64x 配置文件
+
+4. 构建解决方案并部署
 
 ## 一些废话
 

@@ -95,10 +95,15 @@ namespace BallanceLauncher.Pages
                 return;
             }
 
-            await FileHelper.ExtractBallance(path).ConfigureAwait(false);
+            var dlg = DialogHelper.ShowProcessingDialog(XamlRoot, "下载 Ballance");
+
+            await ResourceDownloader.DownloadBallanceAsync(path).ConfigureAwait(false);
+
             var newInstance = await _instancesPage.AddBallanceAsync(path, name).ConfigureAwait(false);
             if (newInstance != null)
                 await newInstance.InstallBMLAsync().ConfigureAwait(false);
+
+            DialogHelper.FinishProcessingDialog(dlg, "下载好啦！");
         }
     }
 }
